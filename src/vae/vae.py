@@ -4,6 +4,8 @@ from tensorflow.layers
 
 class DRT_VAE:
 
+    def __init__(self):
+
 
     def build_model(self):
         inputs_dim = data.inputs_dim

@@ -2,3 +2,4 @@ tensorflow
 mlflow
 pandas
 numpy
+scikit-learn
