@@ -1,5 +1,5 @@
 import tensorflow as tf
-from tensorflow
+from tensorflow.layers
 
 
 class DRT_VAE:
