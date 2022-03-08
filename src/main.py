@@ -9,3 +9,4 @@ if __name__ == "__main__":
     input()
     normalized_data: pd.DataFrame = Preprocessing.normalize(data, args.normalization, args.feature_range)
     print(normalized_data)
+
