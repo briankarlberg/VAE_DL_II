@@ -49,7 +49,7 @@ class DRT_VAE:
                           validation_data=(validation_data, validation_data),
                           epochs=100,
                           callbacks=callback,
-                          batch_size=256,
+                          batch_size=32,
                           shuffle=True,
                           verbose=1)
 

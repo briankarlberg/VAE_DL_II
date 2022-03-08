@@ -4,3 +4,4 @@ venv/
 src/.ipynb*
 data/*.csv
 data/*.tsv
+*.pyc
