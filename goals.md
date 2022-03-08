@@ -11,3 +11,5 @@ Mode? (exacloud)
     
 Connect to ML Flow for tracking
 Make a summary figure(s) of results - B
+
+Clone repo on exacloud
