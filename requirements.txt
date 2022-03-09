@@ -3,3 +3,4 @@ mlflow
 pandas
 numpy
 scikit-learn
+tensorflow_probability
