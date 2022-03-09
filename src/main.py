@@ -4,9 +4,8 @@ from preprocessing.preprocessing import Preprocessing
 from preprocessing.splits import create_splits
 from preprocessing.feature_selection import feature_selection
 from vae.vae import DRT_VAE
-from plotting.plots import plot_model_performance
-from sklearn.metrics import r2_score
-from Evaluation.evaluation import Evaluation
+from pathlib import Path
+from evaluation.evaluation import Evaluation
 
 if __name__ == "__main__":
     args = ArgumentParser.get_args()
@@ -16,10 +15,9 @@ if __name__ == "__main__":
     X_train, X_val, X_test = create_splits(normalized_data)
     model, enc, dec, hist = DRT_VAE.build_model(X_train, X_val, X_train.shape[1],
                                                 embedding_dimension=20)
-    plot_model_performance(hist, None, 'plot_test_v1')
     mean, var, latent_space = enc.predict(X_test)
     prediction = dec.predict(latent_space)
-    score = r2_score(X_test, prediction)
-    evalDF = Evaluation.calculate_r2_score(X_test, prediction, list(normalized_data.columns))
-    evalDF.to_csv('results/samp_r2_score.csv',
-                  index = False)
+    r2_scores = Evaluation.calculate_r2_score(X_test, prediction, list(normalized_data.columns))
+
+    file_name = Path(args.file).stem
+    r2_scores.to_csv(Path("results", f"{file_name}_r2_score.csv"), index=False)
