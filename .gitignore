@@ -2,6 +2,6 @@
 .idea
 venv/
 src/.ipynb*
-data/*.csv
 data/*.tsv
+results/
 *.pyc
