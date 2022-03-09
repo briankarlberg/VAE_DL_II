@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 from pathlib import Path
 
-def plot_model_performance(history: object, sub_directory: str, file_name: str) -> object:
+def plot_model_performance(history: object, sub_directory: str, file_name: str):
     plt.figure(num=None, figsize=(6, 4), dpi=90)
     for key in history.history:
         plt.plot(history.history[key], label=key)

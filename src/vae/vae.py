@@ -20,19 +20,21 @@ class DRT_VAE:
         h1 = layers.Dense(input_dimension, activation=activation, activity_regularizer=r)(encoder_inputs)
         h2 = layers.Dense(input_dimension / 2, activation=activation, activity_regularizer=r)(h1)
         h3 = layers.Dense(input_dimension / 3, activation=activation, activity_regularizer=r)(h2)
+        h4 = layers.Dense(input_dimension / 4, activation=activation, activity_regularizer=r)(h3)
 
-        z_mean = layers.Dense(embedding_dimension, name="z_mean")(h3)
-        z_log_var = layers.Dense(embedding_dimension, name="z_log_var")(h3)
+        z_mean = layers.Dense(embedding_dimension, name="z_mean")(h4)
+        z_log_var = layers.Dense(embedding_dimension, name="z_log_var")(h4)
         z = Sampling()([z_mean, z_log_var])
         encoder = keras.Model(encoder_inputs, [z_mean, z_log_var, z], name="encoder")
         encoder.summary()
 
         # Build the decoder
         decoder_inputs = keras.Input(shape=(embedding_dimension,))
-        h1 = layers.Dense(input_dimension / 3, activation=activation)(decoder_inputs)
-        h2 = layers.Dense(input_dimension / 2, activation=activation)(h1)
+        h1 = layers.Dense(input_dimension / 4, activation=activation)(decoder_inputs)
+        h2 = layers.Dense(input_dimension / 3, activation=activation)(h1)
+        h3 = layers.Dense(input_dimension / 2, activation=activation)(h2)
 
-        decoder_outputs = layers.Dense(input_dimension)(h2)
+        decoder_outputs = layers.Dense(input_dimension)(h3)
         decoder = keras.Model(decoder_inputs, decoder_outputs, name="decoder")
         decoder.summary()
 
