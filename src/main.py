@@ -24,11 +24,20 @@ if __name__ == "__main__":
     X_val = Preprocessing.normalize(data=X_val, method=args.normalization, feature_range=args.feature_range)
     X_test = Preprocessing.normalize(data=X_test, method=args.normalization, feature_range=args.feature_range)
 
-    model, enc, dec, hist = DRT_VAE.build_model(X_train, X_val, X_train.shape[1],
-                                                embedding_dimension=20)
+    # Check which kind of model is requested by user
+    if args.model == "sm":
+        model, enc, dec, hist = DRT_VAE.build_small_model(X_train, X_val, X_train.shape[1],
+                                                          embedding_dimension=20)
+    else:
+        model, enc, dec, hist = DRT_VAE.build_big_model(X_train, X_val, X_train.shape[1],
+                                                        embedding_dimension=20)
+
     mean, var, latent_space = enc.predict(X_test)
     prediction = dec.predict(latent_space)
     r2_scores = Evaluation.calculate_r2_score(X_test, prediction, list(data.columns))
 
+    # Retrieve file name
     file_name = Path(args.file).stem
+
+    # Write file back to results folder
     r2_scores.to_csv(Path("results", f"{file_name}_r2_score.csv"), index=False)

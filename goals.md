@@ -1,25 +1,14 @@
-Add multiple normalization methods
-    --norm = standard - done  
-Add a raw feature file - B
-    to compare w/ downselected featue file
-    
-Mode? (exacloud)
-    adjustment
-    Q - can exacloud track back to ML Flow
-    AWS instance or Azure instance
-    Exastack
-    
-Connect to ML Flow for tracking
-Make a summary figure(s) of results - B
 
-Clone repo on exacloud - done  
+# Goals
 
-## next steps
-collect 499 r2 scores
-    saved in folder
-2nd application
-    re-read and summarize into one plot
-
-generate full feature file ~40K columns
-adjust model beyond 3 layers
-add cmd line arg specify what kind of model
+| Goal 	     / Feature                                              | Description 	                                                                           | Priority	 | Status	     | 	   |
+|-------------------------------------------------------------------|-----------------------------------------------------------------------------------------|-----------|-------------|-----|
+| 	       Collect 499 r2 scores                                     | Run a bulk analysis of all 499 files	                                                   | 	High     | In Progress | 	   |
+| 	       Write evaluation application                              | 	Application will read in all r2 scores to plot distribution and other important metric | 	High     | In Progress | 	   |
+| 	       Clone Repo on Exacloud                                    | Setup the repo in exacloud and make sure it is working	                                 | 	High     | Done        | 	   |
+| 	       Use full feature files                                    | Full feature files include 40k columns	                                                 | 	Medium   | Listed	     | 	   |
+| 	       Adjust model to make use of more layer                    | Models needs to be adjusted for the full feature files	                                 | 	Medium   | Listed	     | 	   |
+| 	       Add command to specify which kind of model should be used | Full feature vs Not full feature should use different models	                           | 	Medium   | Done	       | 	   |
+| 	       MlFlow Integration                                        | MLFlow integration should be implemented if possible                                    | 	Low      | Listed      | 	   |
+| 	                                                                 |                                                                                         | 	         |             | 	   |
+| 	                                                                 |                                                                                         | 	         |             | 	   |
