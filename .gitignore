@@ -9,3 +9,5 @@ data/test_data_v1/*
 data/RFE_100/*
 *.tsv
 *.csv
+output_reports/
+error_reports/
