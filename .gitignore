@@ -3,6 +3,7 @@
 venv/
 src/.ipynb*
 data/*.tsv
+data/*.csv
 results/
 *.pyc
 data/test_data_v1/*
