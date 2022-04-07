@@ -12,4 +12,4 @@
 #SBATCH --mail-user=karlberb@ohsu.edu
 
 source venv/bin/activate
-python3 ./full_gene_exp.py --file $1
+python3 ./full_gene_exp.py -di $1
