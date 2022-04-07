@@ -7,3 +7,4 @@ results/
 *.pyc
 data/test_data_v1/*
 data/RFE_100/*
+full_gene_exp.py
