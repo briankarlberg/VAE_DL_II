@@ -6,3 +6,4 @@ data/*.tsv
 results/
 *.pyc
 data/test_data_v1/*
+data/RFE_100/*
