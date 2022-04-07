@@ -2,7 +2,7 @@
 
 #SBATCH --nodes=1
 #SBATCH --job-name=vae_exa_cloud.sh
-#SBATCH --time=0-2:00:00
+#SBATCH --time=0-24:00:00
 #SBATCH --partition=exacloud
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
