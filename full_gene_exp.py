@@ -9,17 +9,17 @@ parser.add_argument("--drug_index", "-di", action="store",
 args = parser.parse_args()
 drug_index = args.drug_index
 
-config = np.load('./data/ctrp_unique_507.npy', allow_pickle=True)
+# config = np.load('./data/ctrp_unique_507.npy', allow_pickle=True)
 
 start = time.time()
 cell_lines_by_genes = pd.read_csv(
-    '/Users/karlberb/work/drug_response/drug_response/CCLE_gene_expression_by_cell_line.tsv',
+    './data/CCLE_gene_expression_by_cell_line.tsv',
     sep = '\t')
 end = time.time() - start
 # print(str(round(end, 1)))
 
 CTRPv2 = pd.read_csv(
-    '/Users/karlberb/work/drug_response/drug_response/drug_response_CTRPv2.tsv',
+    './data/drug_response_CTRPv2.tsv',
     sep = '\t')
 CTRPv2_unique_compounds = CTRPv2.Drug.unique()
 
