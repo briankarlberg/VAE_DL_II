@@ -2,10 +2,10 @@ from args import ArgumentParser
 import pandas as pd
 from preprocessing.preprocessing import Preprocessing
 from preprocessing.splits import create_splits
-from preprocessing.feature_selection import feature_selection
 from vae.vae import DRT_VAE
 from pathlib import Path
 from evaluation.evaluation import Evaluation
+import time
 
 results_path = Path("results")
 
@@ -39,5 +39,7 @@ if __name__ == "__main__":
     # Retrieve file name
     file_name = Path(args.file).stem
 
+    # get current time in seconds
+    now = int(time.time())
     # Write file back to results folder
-    r2_scores.to_csv(Path("results", f"{file_name}_r2_score.csv"), index=False)
+    r2_scores.to_csv(Path("results", f"{file_name}_{now}_r2_score.csv"), index=False)
