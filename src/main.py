@@ -1,10 +1,10 @@
 from args import ArgumentParser
 import pandas as pd
-from preprocessing.preprocessing import Preprocessing
-from preprocessing.splits import create_splits
-from vae.vae import DRT_VAE
+from preprocessing import Preprocessing
+from preprocessing import create_splits
+from vae import DRT_VAE
 from pathlib import Path
-from evaluation.evaluation import Evaluation
+from evaluation import Evaluation
 import time
 
 results_path = Path("results")

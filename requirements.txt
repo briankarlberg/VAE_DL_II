@@ -4,3 +4,5 @@ pandas
 numpy
 scikit-learn
 tensorflow_probability
+bayesian-optimization
+scipy==1.7
