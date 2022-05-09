@@ -20,7 +20,7 @@ def get_args():
     parser = argparse.ArgumentParser()
 
     parser.add_argument("-cg", "--coding_genes", action="store", required=True, help="The file to use for coding genes")
-    parser.add_argument("-ncg", "--encoding_genes", action="store", required=True,
+    parser.add_argument("-ncg", "--non_coding_genes", action="store", required=True,
                         help="The file to use for non coding gene")
     parser.add_argument("-mf", "--molecular_fingerprint", action="store", required=True,
                         help="The file to use for the molecular fingerprint")
@@ -73,4 +73,3 @@ if __name__ == "__main__":
     optimizer.maximize(init_points=2, n_iter=3)
 
     print(optimizer.max)
-
