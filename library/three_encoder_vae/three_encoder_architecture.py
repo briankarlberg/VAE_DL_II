@@ -8,7 +8,8 @@ import tensorflow as tf
 from library.three_encoder_vae.custom_callbacks import WeightsForBatch
 from tensorflow.keras.models import Model
 from typing import Tuple
-from tensorflow.keras.utils import plot_model
+from keras.callbacks import TerminateOnNaN, CSVLogger, ModelCheckpoint, EarlyStopping
+from pathlib import Path
 
 
 # https://towardsdatascience.com/intuitively-understanding-variational-autoencoders-1bfe67eb5daf
@@ -19,19 +20,19 @@ class ThreeEncoderArchitecture:
     @staticmethod
     def build_three_variational_auto_encoder(training_data: Tuple,
                                              validation_data: Tuple,
-                                             output_dimensions: int,
                                              embedding_dimension: int,
                                              amount_of_layers: dict,
                                              activation='relu',
                                              learning_rate: float = 1e-3,
-                                             optimizer: str = "adam",
-                                             use_ml_flow: bool = True):
+                                             optimizer: str = "adam"):
         """
         Compiles the vae based on the given input parameters
         """
 
         if len(training_data) != 3:
             raise ValueError("Training and validation data must contain two datasets!")
+
+        embedding_dimension = int(embedding_dimension)
 
         coding_gene_training_data: pd.DataFrame = training_data[0]
         non_coding_gene_training_data: pd.DataFrame = training_data[1]
@@ -104,9 +105,20 @@ class ThreeEncoderArchitecture:
             name="decoder")
         decoder.summary()
 
-        early_stopping = tf.keras.callbacks.EarlyStopping(monitor="reconstruction_loss",
-                                                          mode="min", patience=5,
-                                                          restore_best_weights=True)
+        callbacks = []
+
+        early_stopping = EarlyStopping(monitor="reconstruction_loss",
+                                       mode="min", patience=5,
+                                       restore_best_weights=True)
+        callbacks.append(early_stopping)
+
+        term_nan = TerminateOnNaN()
+        callbacks.append(term_nan)
+
+        csv_logger = CSVLogger(Path.joinpath("results", 'training.log'),
+                               separator='\t')
+        callbacks.append(csv_logger)
+
         vae = ThreeEncoderVAE(encoder, decoder)
         vae.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate))
         # plot_model(encoder, "encoder.png", show_shapes=True)
@@ -119,7 +131,7 @@ class ThreeEncoderArchitecture:
                 [coding_gene_validation_data, non_coding_gene_validation_data, molecular_fingerprints_validation_data],
                 [coding_gene_validation_data, non_coding_gene_validation_data, molecular_fingerprints_validation_data]),
             epochs=500,
-            callbacks=[early_stopping, WeightsForBatch()],
+            callbacks=callbacks,
             batch_size=256,
             shuffle=True,
             verbose=1)
