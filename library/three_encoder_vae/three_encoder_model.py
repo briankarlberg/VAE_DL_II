@@ -32,7 +32,7 @@ class ThreeEncoderVAE(keras.Model):
             reconstruction_loss = reconstruction_loss_fn(data, reconstruction)
             kl_loss = -0.5 * (1 + z_log_var - tf.square(z_mean) - tf.exp(z_log_var))
             kl_loss = tf.reduce_mean(tf.reduce_sum(kl_loss, axis=1))
-            total_loss = reconstruction_loss + 0.001 * kl_loss
+            total_loss = reconstruction_loss + kl_loss
 
         grads = tape.gradient(total_loss, self.trainable_weights)
         self.optimizer.apply_gradients(zip(grads, self.trainable_weights))
@@ -47,15 +47,17 @@ class ThreeEncoderVAE(keras.Model):
 
     def call(self, inputs):
 
-        marker_indices = range(0, 20)
-        morph_indices = range(20, 25)
+        coding_indices = range(0, 19186)
+        non_coding_indices = range(19186, 57820)
+        molecular_fingerprint_indices = range(57820, 59868)
 
         if type(inputs) is tuple:
             marker = inputs[0]
             morph = inputs[1]
         else:
-            marker = tf.gather(inputs, marker_indices, axis=1)
-            morph = tf.gather(inputs, morph_indices, axis=1)
+            coding_genes = tf.gather(inputs, coding_indices, axis=1)
+            non_coding_genes = tf.gather(inputs, non_coding_indices, axis=1)
+            molecular_fingerprints = tf.gather(inputs, molecular_fingerprint_indices, axis=1)
 
-        z_mean, z_log_var, z = self.encoder([marker, morph])
+        z_mean, z_log_var, z = self.encoder([coding_genes, non_coding_genes, molecular_fingerprints])
         return self.decoder(z)
