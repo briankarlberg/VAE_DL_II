@@ -20,9 +20,9 @@ def get_args():
     parser = argparse.ArgumentParser()
 
     parser.add_argument("-cg", "--coding_genes", action="store", required=True, help="The file to use for coding genes")
-    parser.add_argument("-ncg", "-encoding_genes", action="store", required=True,
+    parser.add_argument("-ncg", "--encoding_genes", action="store", required=True,
                         help="The file to use for non coding gene")
-    parser.add_argument("-mf", "-molecular_fingerprint", action="store", required=True,
+    parser.add_argument("-mf", "--molecular_fingerprint", action="store", required=True,
                         help="The file to use for the molecular fingerprint")
     return parser.parse_args()
 
