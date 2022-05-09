@@ -7,3 +7,4 @@ tensorflow_probability
 bayesian-optimization
 scipy==1.7
 pydot
+bayes_opt
