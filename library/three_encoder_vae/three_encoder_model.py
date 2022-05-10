@@ -25,7 +25,7 @@ class ThreeEncoderVAE(keras.Model):
     def train_step(self, data):
         with tf.GradientTape() as tape:
             z_mean, z_log_var, z = self.encoder(data)
-            reconstruction = self.decoder(z)
+            reconstruction = self.decoder([z, z, z])
             reconstruction_loss_fn = keras.losses.MeanSquaredError()
             # Concatenate encoders
             data = concatenate([data[0][0], data[0][1]], data[0][2])
@@ -61,4 +61,4 @@ class ThreeEncoderVAE(keras.Model):
             molecular_fingerprints = tf.gather(inputs, molecular_fingerprint_indices, axis=1)
 
         z_mean, z_log_var, z = self.encoder([coding_genes, non_coding_genes, molecular_fingerprints])
-        return self.decoder(z, z, z)
+        return self.decoder([z, z, z])
