@@ -25,7 +25,7 @@ class Preprocessing:
 
         data = data.where(data != 0, other=1e-32)
         # data = data.apply(lambda x: np.log10(x) if np.issubdtype(x.dtype, np.number) else x)
-        data = np.log10(data)
+        # data = np.log10(data)
 
         # filter numeric columns
         # num_cols = data.columns[data.dtypes.apply(lambda c: np.issubdtype(c, np.number))]
