@@ -49,9 +49,9 @@ if __name__ == '__main__':
                                                               features=non_coding_gene_data.columns.tolist())
 
     molecular_fingerprint_train_data = Preprocessing.normalize(data=molecular_fingerprint_train_data,
-                                                               features=coding_gene_data.columns.tolist())
+                                                               features=molecular_fingerprint_data.columns.tolist())
     molecular_fingerprint_validation_data = Preprocessing.normalize(data=molecular_fingerprint_validation_data,
-                                                                    features=coding_gene_data.columns.tolist())
+                                                                    features=molecular_fingerprint_data.columns.tolist())
 
     amount_of_layers: dict = {
         "coding_genes": [15000, 10000, 5000, 2500, 1000, 500, 200],
