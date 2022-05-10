@@ -61,4 +61,4 @@ class ThreeEncoderVAE(keras.Model):
             molecular_fingerprints = tf.gather(inputs, molecular_fingerprint_indices, axis=1)
 
         z_mean, z_log_var, z = self.encoder([coding_genes, non_coding_genes, molecular_fingerprints])
-        return self.decoder([z, z, z])
+        return self.decoder(z, z, z)
