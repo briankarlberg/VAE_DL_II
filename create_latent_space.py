@@ -59,7 +59,8 @@ if __name__ == '__main__':
         "molecular_fingerprint": [1000, 500, 200],
     }
 
-    model, encoder, decoder, history = ThreeEncoderArchitecture.build_three_variational_auto_encoder(
+    vae: ThreeEncoderArchitecture = ThreeEncoderArchitecture(base_path=base_path, csv_logger=False, plot_model=True)
+    model, encoder, decoder, history = vae.build_three_variational_auto_encoder(
         training_data=(coding_gene_train_data, non_coding_gene_train_data, molecular_fingerprint_train_data),
         validation_data=(
             coding_gene_validation_data, non_coding_gene_validation_data, molecular_fingerprint_validation_data),
