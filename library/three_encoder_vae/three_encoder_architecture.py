@@ -115,9 +115,9 @@ class ThreeEncoderArchitecture:
         term_nan = TerminateOnNaN()
         callbacks.append(term_nan)
 
-        csv_logger = CSVLogger(Path.joinpath("results", 'training.log'),
-                               separator='\t')
-        callbacks.append(csv_logger)
+        # csv_logger = CSVLogger(Path.joinpath("results", 'training.log'),
+        #                       separator='\t')
+        # callbacks.append(csv_logger)
 
         vae = ThreeEncoderVAE(encoder, decoder)
         vae.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate))
