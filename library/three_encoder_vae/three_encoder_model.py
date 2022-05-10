@@ -52,12 +52,13 @@ class ThreeEncoderVAE(keras.Model):
         molecular_fingerprint_indices = range(57820, 59868)
 
         if type(inputs) is tuple:
-            marker = inputs[0]
-            morph = inputs[1]
+            coding_genes = inputs[0]
+            non_coding_genes = inputs[1]
+            molecular_fingerprints = inputs[2]
         else:
             coding_genes = tf.gather(inputs, coding_indices, axis=1)
             non_coding_genes = tf.gather(inputs, non_coding_indices, axis=1)
             molecular_fingerprints = tf.gather(inputs, molecular_fingerprint_indices, axis=1)
 
         z_mean, z_log_var, z = self.encoder([coding_genes, non_coding_genes, molecular_fingerprints])
-        return self.decoder(z)
+        return self.decoder([z, z, z])
