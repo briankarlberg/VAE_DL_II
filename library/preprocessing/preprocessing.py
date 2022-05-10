@@ -24,14 +24,15 @@ class Preprocessing:
         # https://www.researchgate.net/post/Log_transformation_of_values_that_include_0_zero_for_statistical_analyses2
 
         data = data.where(data != 0, other=1e-32)
-        data = data.apply(lambda x: np.log10(x) if np.issubdtype(x.dtype, np.number) else x)
+        # data = data.apply(lambda x: np.log10(x) if np.issubdtype(x.dtype, np.number) else x)
+        data = np.log10(data)
 
         # filter numeric columns
-        num_cols = data.columns[data.dtypes.apply(lambda c: np.issubdtype(c, np.number))]
+        # num_cols = data.columns[data.dtypes.apply(lambda c: np.issubdtype(c, np.number))]
 
         if method == "s":
             standard_scaler = StandardScaler()
-            data[num_cols] = standard_scaler.fit_transform(data[num_cols])
+            data = standard_scaler.fit_transform(data)
 
         elif method == "min":
             if feature_range is not None:
@@ -39,7 +40,7 @@ class Preprocessing:
             else:
                 min_max_scaler = MinMaxScaler(feature_range=(-1, 1))
 
-            data[num_cols] = min_max_scaler.fit_transform(data[num_cols])
+            data = min_max_scaler.fit_transform(data)
 
         else:
             raise f"Please provide a valid normalization method. Select one of these options: " \
