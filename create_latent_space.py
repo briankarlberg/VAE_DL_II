@@ -20,6 +20,8 @@ def get_args():
                         help="The file to use for non coding gene")
     parser.add_argument("-mf", "--molecular_fingerprint", action="store", required=True,
                         help="The file to use for the molecular fingerprint")
+    parser.add_argument("-s", "--scaling", action="store", required=False,
+                        help="Which type of scaling should be used", choices=["min", "s"], default="s")
     return parser.parse_args()
 
 
@@ -39,19 +41,24 @@ if __name__ == '__main__':
 
     # Normalize
     coding_gene_train_data = Preprocessing.normalize(data=coding_gene_train_data,
-                                                     features=coding_gene_data.columns.tolist())
+                                                     features=coding_gene_data.columns.tolist(), method=args.scaling)
     coding_gene_validation_data = Preprocessing.normalize(data=coding_gene_validation_data,
-                                                          features=coding_gene_data.columns.tolist())
+                                                          features=coding_gene_data.columns.tolist(),
+                                                          method=args.scaling)
 
     non_coding_gene_train_data = Preprocessing.normalize(data=non_coding_gene_train_data,
-                                                         features=non_coding_gene_data.columns.tolist())
+                                                         features=non_coding_gene_data.columns.tolist(),
+                                                         method=args.scaling)
     non_coding_gene_validation_data = Preprocessing.normalize(data=non_coding_gene_validation_data,
-                                                              features=non_coding_gene_data.columns.tolist())
+                                                              features=non_coding_gene_data.columns.tolist(),
+                                                              method=args.scaling)
 
     molecular_fingerprint_train_data = Preprocessing.normalize(data=molecular_fingerprint_train_data,
-                                                               features=molecular_fingerprint_data.columns.tolist())
+                                                               features=molecular_fingerprint_data.columns.tolist(),
+                                                               method=args.scaling)
     molecular_fingerprint_validation_data = Preprocessing.normalize(data=molecular_fingerprint_validation_data,
-                                                                    features=molecular_fingerprint_data.columns.tolist())
+                                                                    features=molecular_fingerprint_data.columns.tolist(),
+                                                                    method=args.scaling)
 
     amount_of_layers: dict = {
         "coding_genes": [15000, 10000, 5000, 2500, 1000, 500, 200],
@@ -60,6 +67,7 @@ if __name__ == '__main__':
     }
 
     vae: ThreeEncoderArchitecture = ThreeEncoderArchitecture(base_path=base_path, csv_logger=False, plot_model=True)
+    input()
     model, encoder, decoder, history = vae.build_three_variational_auto_encoder(
         training_data=(coding_gene_train_data, non_coding_gene_train_data, molecular_fingerprint_train_data),
         validation_data=(

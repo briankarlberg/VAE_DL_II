@@ -114,7 +114,7 @@ class ThreeEncoderArchitecture:
         molecular_fingerprints_decoder.summary()
 
         decoder = keras.Model(
-            inputs=[coding_gene_decoder.input, non_coding_gene_decoder.input, molecular_fingerprints_decoder.input],
+            inputs=[encoder.input],
             outputs=[coding_gene_decoder.output, non_coding_gene_decoder.output, molecular_fingerprints_decoder.output],
             name="decoder")
         decoder.summary()
@@ -140,7 +140,6 @@ class ThreeEncoderArchitecture:
             plotter: Plotting = Plotting(base_path=self._base_path)
             plotter.plot_model_architecture(encoder, "encoder.png")
             plotter.plot_model_architecture(decoder, "decoder.png")
-            input()
 
         history = vae.fit(
             [coding_gene_training_data, non_coding_gene_training_data, molecular_fingerprints_training_data],
