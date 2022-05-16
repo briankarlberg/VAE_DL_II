@@ -94,7 +94,7 @@ class ThreeEncoderArchitecture:
 
         molecular_fingerprints_decoder: Model = ThreeEncoderArchitecture.__create_sub_model(
             input_dimensions=embedding_dimension, activation=activation,
-            layer_dimensions=non_coding_gene_layers, r=r, model_name="molecular_fingerprint_decoder")
+            layer_dimensions=molecular_fingerprint_layers, r=r, model_name="molecular_fingerprint_decoder")
 
         molecular_fingerprints_decoder.summary()
 

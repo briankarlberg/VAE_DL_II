@@ -72,7 +72,7 @@ if __name__ == '__main__':
         validation_data=(
             coding_gene_validation_data, non_coding_gene_validation_data, molecular_fingerprint_validation_data),
         amount_of_layers=amount_of_layers,
-        embedding_dimension=1000
+        embedding_dimension=200
     )
 
     plotter: Plotting = Plotting(base_path=base_path)
