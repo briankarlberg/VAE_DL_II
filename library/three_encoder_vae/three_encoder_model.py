@@ -1,6 +1,6 @@
 import tensorflow as tf
 from tensorflow import keras
-from keras.layers import concatenate, multiply
+from keras.layers import concatenate
 
 
 class ThreeEncoderVAE(keras.Model):
@@ -28,7 +28,7 @@ class ThreeEncoderVAE(keras.Model):
             reconstruction = self.decoder(z, z, z)
             reconstruction_loss_fn = keras.losses.MeanSquaredError()
             # Concatenate encoders
-            data = multiply([data[0][0], data[0][1]], data[0][2])
+            data = concatenate([data[0][0], data[0][1]], data[0][2])
             reconstruction_loss = reconstruction_loss_fn(data, reconstruction)
             kl_loss = -0.5 * (1 + z_log_var - tf.square(z_mean) - tf.exp(z_log_var))
             kl_loss = tf.reduce_mean(tf.reduce_sum(kl_loss, axis=1))

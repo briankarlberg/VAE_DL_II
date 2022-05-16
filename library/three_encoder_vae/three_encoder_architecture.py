@@ -5,10 +5,11 @@ from library.three_encoder_vae.sampling import Sampling
 from keras.layers import concatenate
 from library.three_encoder_vae.three_encoder_model import ThreeEncoderVAE
 import tensorflow as tf
+from library.three_encoder_vae.custom_callbacks import WeightsForBatch
 from tensorflow.keras.models import Model
 from typing import Tuple
-from keras.callbacks import TerminateOnNaN, CSVLogger, EarlyStopping
-from library.plotting.plots import Plotting
+from keras.callbacks import TerminateOnNaN, CSVLogger, ModelCheckpoint, EarlyStopping
+from pathlib import Path
 
 
 # https://towardsdatascience.com/intuitively-understanding-variational-autoencoders-1bfe67eb5daf
@@ -16,24 +17,8 @@ from library.plotting.plots import Plotting
 
 class ThreeEncoderArchitecture:
 
-    def __init__(self, base_path: str, csv_logger: bool = True, plot_model: bool = False):
-        self._base_path = base_path
-        self._csv_logger = csv_logger
-        self._plot_model = plot_model
-
-    @property
-    def csv_logger(self):
-        return self._csv_logger
-
-    @property
-    def plot_model(self):
-        return self._plot_model
-
-    @property
-    def base_path(self):
-        return self._base_path
-
-    def build_three_variational_auto_encoder(self, training_data: Tuple,
+    @staticmethod
+    def build_three_variational_auto_encoder(training_data: Tuple,
                                              validation_data: Tuple,
                                              embedding_dimension: int,
                                              amount_of_layers: dict,
@@ -114,8 +99,9 @@ class ThreeEncoderArchitecture:
         molecular_fingerprints_decoder.summary()
 
         decoder = keras.Model(
-            inputs=[encoder.input],
-            outputs=[coding_gene_decoder.output, non_coding_gene_decoder.output, molecular_fingerprints_decoder.output],
+            inputs=[coding_gene_decoder.input, non_coding_gene_decoder.input, molecular_fingerprints_decoder.input],
+            outputs=[coding_gene_decoder.output, non_coding_gene_decoder.output,
+                     molecular_fingerprints_decoder.output],
             name="decoder")
         decoder.summary()
 
@@ -136,10 +122,13 @@ class ThreeEncoderArchitecture:
         vae = ThreeEncoderVAE(encoder, decoder)
         vae.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate))
 
-        if self._plot_model:
-            plotter: Plotting = Plotting(base_path=self._base_path)
-            plotter.plot_model_architecture(encoder, "encoder.png")
-            plotter.plot_model_architecture(decoder, "decoder.png")
+        # if self._plot_model:
+        #    plotter: Plotting = Plotting(base_path=self._base_path)
+        #    plotter.plot_model_architecture(encoder, "encoder.png")
+        #    plotter.plot_model_architecture(decoder, "decoder.png")
+        # plot_model(encoder, "encoder.png", show_shapes=True)
+        # plot_model(decoder, "decoder.png", show_shapes=True)
+        # input()
 
         history = vae.fit(
             [coding_gene_training_data, non_coding_gene_training_data, molecular_fingerprints_training_data],
