@@ -5,6 +5,7 @@ from keras.layers import concatenate
 
 class ThreeEncoderVAE(keras.Model):
     def __init__(self, encoder, decoder, **kwargs):
+        # TODO: add params for shapes of the data, to make it more generic in the call step
         super(ThreeEncoderVAE, self).__init__(**kwargs)
         self.encoder = encoder
         self.decoder = decoder
@@ -25,11 +26,17 @@ class ThreeEncoderVAE(keras.Model):
     def train_step(self, data):
         with tf.GradientTape() as tape:
             z_mean, z_log_var, z = self.encoder(data)
-            reconstruction = self.decoder([z, z, z])
+            recon_coding_genes, recon_non_coding_genes, recon_molecular_fingerprint = self.decoder([z, z, z])
             reconstruction_loss_fn = keras.losses.MeanSquaredError()
-            # Concatenate encoders
-            data = concatenate([data[0][0], data[0][1], data[0][2]])
-            reconstruction_loss = reconstruction_loss_fn(data, reconstruction)
+
+            # Calculate los
+            recon_coding_genes_loss = reconstruction_loss_fn(data[0][0], recon_coding_genes)
+            recon_non_coding_genes_loss = reconstruction_loss_fn(data[0][1], recon_non_coding_genes)
+            recon_molecular_fingerprint_loss = reconstruction_loss_fn(data[0][2], recon_molecular_fingerprint)
+
+            # Sum total recon loss
+            reconstruction_loss = recon_coding_genes_loss + recon_non_coding_genes_loss + recon_molecular_fingerprint_loss
+
             kl_loss = -0.5 * (1 + z_log_var - tf.square(z_mean) - tf.exp(z_log_var))
             kl_loss = tf.reduce_mean(tf.reduce_sum(kl_loss, axis=1))
             total_loss = reconstruction_loss + kl_loss
