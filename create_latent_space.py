@@ -61,9 +61,10 @@ if __name__ == '__main__':
                                                                     method=args.scaling)
 
     amount_of_layers: dict = {
-        "coding_genes": [15000, 10000, 5000, 2500, 1000, 500, 200],
-        "non_coding_genes": [30000, 25000, 20000, 15000, 10000, 5000, 2500, 1000, 500, 200],
-        "molecular_fingerprint": [1000, 500, 200],
+        "coding_genes": [coding_gene_data.shape[1], 15000, 10000, 5000, 2500, 1000, 500, 200],
+        "non_coding_genes": [non_coding_gene_data.shape[1], 30000, 25000, 20000, 15000, 10000, 5000, 2500, 1000, 500,
+                             200],
+        "molecular_fingerprint": [molecular_fingerprint_train_data.shape[1], 1000, 500, 200],
     }
 
     vae: ThreeEncoderArchitecture = ThreeEncoderArchitecture()
