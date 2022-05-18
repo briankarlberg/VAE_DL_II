@@ -6,7 +6,7 @@
 #SBATCH --error=./error_reports/slurm.%N.%j.err
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=karlberb@ohsu.edu,kirchgae@ohsu.edu
-#SBATCH --mem 128G
+#SBATCH --mem 256G
 
 source venv/bin/activate
 python3 create_latent_space.py -cg $1 -ncg $2 -mf $3 -s $4
