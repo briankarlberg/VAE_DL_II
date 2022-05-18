@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from pathlib import Path
+import os
 
 
 class Plotting:
@@ -21,8 +22,8 @@ class Plotting:
         plt.tight_layout()
 
         if sub_directory is not None:
-            save_path = Path.joinpath(self._base_path, sub_directory,f"{file_name}.png")
+            save_path = os.path.join(self._base_path, sub_directory, f"{file_name}.png")
         else:
-            save_path = Path.joinpath(self._base_path, f"{file_name}.png")
+            save_path = os.path.join(self._base_path, f"{file_name}.png")
         plt.savefig(save_path)
         plt.close()
