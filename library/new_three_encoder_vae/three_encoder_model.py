@@ -58,21 +58,22 @@ class NewThreeEncoderVAE(keras.Model):
 
     def call(self, inputs):
 
-        coding_indices = range(0, 19186)
-        non_coding_indices = range(19186, 57820)
-        molecular_fingerprint_indices = range(57820, 59868)
-
         if type(inputs) is tuple:
             coding_genes = inputs[0]
             non_coding_genes = inputs[1]
             molecular_fingerprints = inputs[2]
         else:
-            coding_genes = tf.gather(inputs, coding_indices, axis=1)
-            non_coding_genes = tf.gather(inputs, non_coding_indices, axis=1)
-            molecular_fingerprints = tf.gather(inputs, molecular_fingerprint_indices, axis=1)
+            coding_genes = inputs
+            non_coding_genes = inputs
+            molecular_fingerprints = inputs
 
-        z_mean, z_log_var, z = self.encoder([coding_genes, non_coding_genes, molecular_fingerprints])
-        return self.decoder([z, z, z])
+        _, _, coding_z = self.coding_encoder(coding_genes)
+        _, _, non_coding_z = self.non_coding_encoder(non_coding_genes)
+        _, _, molecular_fingerprints_z = self.mf_encoder(molecular_fingerprints
+                                                         )
+
+        return self.coding_decoder(coding_z), self.non_coding_decoder(non_coding_z), self.mf_decoder(
+            molecular_fingerprints_z)
 
     def calculate_loss(self, encoder: Model, decoder: Model, data) -> Tuple:
         z_mean, z_log_var, z = encoder(data)
