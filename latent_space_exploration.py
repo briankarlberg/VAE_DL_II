@@ -5,6 +5,7 @@ from library.preprocessing.splits import SplitHandler
 from library.preprocessing.preprocessing import Preprocessing
 from library.three_encoder_vae.three_encoder_architecture import ThreeEncoderArchitecture
 from library.plotting.plots import Plotting
+from library.new_three_encoder_vae.three_encoder_architecture import NewThreeEncoderArchitecture
 
 base_path = "latent_space_generation"
 
@@ -22,6 +23,7 @@ def get_args():
                         help="The file to use for the molecular fingerprint")
     parser.add_argument("-s", "--scaling", action="store", required=False,
                         help="Which type of scaling should be used", choices=["min", "s"], default="s")
+    parser.add_argument("-m", "--model", action="store", required=False, choices=["o", "n"], default="o")
     return parser.parse_args()
 
 
@@ -67,14 +69,27 @@ if __name__ == '__main__':
         "molecular_fingerprint": [molecular_fingerprint_train_data.shape[1], 1000, 500, 200],
     }
 
-    vae: ThreeEncoderArchitecture = ThreeEncoderArchitecture()
-    model, encoder, decoder, history = vae.build_three_variational_auto_encoder(
-        training_data=(coding_gene_train_data, non_coding_gene_train_data, molecular_fingerprint_train_data),
-        validation_data=(
-            coding_gene_validation_data, non_coding_gene_validation_data, molecular_fingerprint_validation_data),
-        amount_of_layers=amount_of_layers,
-        embedding_dimension=200
-    )
+    if args.model == 'o':
+        vae: ThreeEncoderArchitecture = ThreeEncoderArchitecture()
+        model, encoder, decoder, history = vae.build_three_variational_auto_encoder(
+            training_data=(coding_gene_train_data, non_coding_gene_train_data, molecular_fingerprint_train_data),
+            validation_data=(
+                coding_gene_validation_data, non_coding_gene_validation_data, molecular_fingerprint_validation_data),
+            amount_of_layers=amount_of_layers,
+            embedding_dimension=200
+        )
+
+    else:
+        vae: NewThreeEncoderArchitecture = NewThreeEncoderArchitecture()
+        vae.build_three_variational_auto_encoder(
+            training_data=(coding_gene_train_data, non_coding_gene_train_data, molecular_fingerprint_train_data),
+            validation_data=(
+                coding_gene_validation_data, non_coding_gene_validation_data, molecular_fingerprint_validation_data),
+            amount_of_layers=amount_of_layers,
+            embedding_dimension=200
+        )
+
+        history = vae.history
 
     plotter: Plotting = Plotting(base_path=base_path)
     plotter.plot_model_performance(history=history, file_name="Model History")

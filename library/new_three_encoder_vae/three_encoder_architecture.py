@@ -16,7 +16,48 @@ from keras.callbacks import TerminateOnNaN, CSVLogger, ModelCheckpoint, EarlySto
 class NewThreeEncoderArchitecture:
 
     def __init__(self):
-        pass
+        self._coding_gene_encoder: Model = None
+        self._non_coding_gene_encoder: Model = None
+        self._molecular_fingerprints_encoder: Model = None
+
+        self._coding_gene_decoder: Model = None
+        self._non_coding_gene_decoder: Model = None
+        self._molecular_fingerprints_decoder: Model = None
+
+        self._vae: Model = None
+        self._history = None
+
+    @property
+    def coding_gene_encoder(self) -> Model:
+        return self._coding_gene_encoder
+
+    @property
+    def non_coding_gene_encoder(self) -> Model:
+        return self._non_coding_gene_encoder
+
+    @property
+    def molecular_fingerprints_encoder(self) -> Model:
+        return self._molecular_fingerprints_encoder
+
+    @property
+    def coding_gene_decoder(self) -> Model:
+        return self._coding_gene_decoder
+
+    @property
+    def non_coding_gene_decoder(self) -> Model:
+        return self._non_coding_gene_decoder
+
+    @property
+    def molecular_fingerprints_decoder(self) -> Model:
+        return self._molecular_fingerprints_decoder
+
+    @property
+    def vae(self):
+        return self._vae
+
+    @property
+    def history(self):
+        return self._history
 
     def build_three_variational_auto_encoder(self, training_data: Tuple,
                                              validation_data: Tuple,
@@ -50,17 +91,17 @@ class NewThreeEncoderArchitecture:
 
         # Switch network when layers are redefined
 
-        coding_gene_encoder: Model = self.__create_encoder_model(
+        self._coding_gene_encoder: Model = self.__create_encoder_model(
             input_dimensions=coding_gene_training_data.shape[1], activation=activation,
             layer_dimensions=coding_gene_layers, r=r, model_name="coding_genes_encoder",
             embedding_dimensions=embedding_dimension)
 
-        non_coding_gene_encoder = self.__create_encoder_model(
+        self._non_coding_gene_encoder = self.__create_encoder_model(
             input_dimensions=non_coding_gene_training_data.shape[1], activation=activation,
             layer_dimensions=non_coding_gene_layers, r=r, model_name="non_coding_genes_encoder",
             embedding_dimensions=embedding_dimension)
 
-        molecular_fingerprints_encoder = self.__create_encoder_model(
+        self._molecular_fingerprints_encoder = self.__create_encoder_model(
             input_dimensions=molecular_fingerprints_training_data.shape[1], activation=activation,
             layer_dimensions=molecular_fingerprint_layers, r=r, model_name="molecular_fingerprint_encoder",
             embedding_dimensions=embedding_dimension)
@@ -70,23 +111,23 @@ class NewThreeEncoderArchitecture:
         non_coding_gene_layers.reverse()
         molecular_fingerprint_layers.reverse()
 
-        coding_gene_decoder: Model = self.__create_decoder_model(
+        self._coding_gene_decoder: Model = self.__create_decoder_model(
             input_dimensions=embedding_dimension, activation=activation,
             layer_dimensions=coding_gene_layers, r=r, model_name="coding_genes_decoder")
 
-        coding_gene_decoder.summary()
+        self._coding_gene_decoder.summary()
 
-        non_coding_gene_decoder: Model = self.__create_decoder_model(
+        self._non_coding_gene_decoder: Model = self.__create_decoder_model(
             input_dimensions=embedding_dimension, activation=activation,
             layer_dimensions=non_coding_gene_layers, r=r, model_name="non_coding_genes_decoder")
 
-        non_coding_gene_decoder.summary()
+        self._non_coding_gene_decoder.summary()
 
-        molecular_fingerprints_decoder: Model = self.__create_decoder_model(
+        self._molecular_fingerprints_decoder: Model = self.__create_decoder_model(
             input_dimensions=embedding_dimension, activation=activation,
             layer_dimensions=molecular_fingerprint_layers, r=r, model_name="molecular_fingerprint_decoder")
 
-        molecular_fingerprints_decoder.summary()
+        self._molecular_fingerprints_decoder.summary()
 
         callbacks = []
 
@@ -102,9 +143,11 @@ class NewThreeEncoderArchitecture:
         #                       separator='\t')
         # callbacks.append(csv_logger)
 
-        vae = NewThreeEncoderVAE(coding_gene_encoder, non_coding_gene_encoder, molecular_fingerprints_encoder,
-                                 coding_gene_decoder, non_coding_gene_decoder, molecular_fingerprints_decoder)
-        vae.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate))
+        self._vae = NewThreeEncoderVAE(self._coding_gene_encoder, self._non_coding_gene_encoder,
+                                       self._molecular_fingerprints_encoder,
+                                       self._coding_gene_decoder, self._non_coding_gene_decoder,
+                                       self._molecular_fingerprints_decoder)
+        self._vae.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate))
 
         # if self._plot_model:
         #    plotter: Plotting = Plotting(base_path=self._base_path)
@@ -114,7 +157,7 @@ class NewThreeEncoderArchitecture:
         # plot_model(decoder, "decoder.png", show_shapes=True)
         # input()
 
-        history = vae.fit(
+        self._history = self._vae.fit(
             [coding_gene_training_data, non_coding_gene_training_data, molecular_fingerprints_training_data],
             validation_data=(
                 [coding_gene_validation_data, non_coding_gene_validation_data, molecular_fingerprints_validation_data],
@@ -124,8 +167,6 @@ class NewThreeEncoderArchitecture:
             batch_size=256,
             shuffle=True,
             verbose=1)
-
-        return vae, encoder, decoder, history
 
     @staticmethod
     def __create_encoder_model(input_dimensions: int, activation: str, r: int, layer_dimensions: list,
