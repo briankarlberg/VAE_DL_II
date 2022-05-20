@@ -6,8 +6,10 @@ from library.preprocessing.preprocessing import Preprocessing
 from library.three_encoder_vae.three_encoder_architecture import ThreeEncoderArchitecture
 from library.plotting.plots import Plotting
 from library.new_three_encoder_vae.three_encoder_architecture import NewThreeEncoderArchitecture
+from pathlib import Path
+from library.data.folder_management import FolderManagement
 
-base_path = "latent_space_generation"
+base_path = Path("latent_space_generation")
 
 
 def get_args():
@@ -29,6 +31,9 @@ def get_args():
 
 if __name__ == '__main__':
     args = get_args()
+
+    if not base_path.exists():
+        FolderManagement.create_directory(base_path)
 
     coding_gene_data: pd.DataFrame = DataLoader.load_data(args.coding_genes)
     non_coding_gene_data: pd.DataFrame = DataLoader.load_data(args.non_coding_genes)
@@ -91,5 +96,5 @@ if __name__ == '__main__':
 
         history = vae.history
 
-    plotter: Plotting = Plotting(base_path=base_path)
+    plotter: Plotting = Plotting(base_path=str(base_path))
     plotter.plot_model_performance(history=history, file_name="Model History")
