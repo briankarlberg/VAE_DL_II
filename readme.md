@@ -15,6 +15,6 @@ Command line args
 
 standard scaler does not use feature range
 
-sbatch LatentSpaceExploration.sh data/coding_1.tsv data/noncod_1.tsv data/morgan_1.tsv  
+sbatch LatentSpaceExploration.sh data/coding_1.tsv data/noncod_1.tsv data/morgan_1.tsv min o  
 
 
