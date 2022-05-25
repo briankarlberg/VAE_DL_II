@@ -15,6 +15,9 @@ Command line args
 
 standard scaler does not use feature range
 
+Generic gpu call on 5 sample files, 2022-05-25
+sbatch LSE.sh data/coding_5.tsv data/noncod_5.tsv data/morgan_5.tsv min o
+
 For 5 sample files, test on 2022-05-25
 sbatch LatentSpaceExploration.sh data/coding_5.tsv data/noncod_5.tsv data/morgan_5.tsv min o
 
