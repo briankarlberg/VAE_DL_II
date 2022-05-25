@@ -8,6 +8,7 @@ import tensorflow as tf
 from tensorflow.keras.models import Model
 from typing import Tuple
 from keras.callbacks import TerminateOnNaN, CSVLogger, ModelCheckpoint, EarlyStopping
+import os
 
 
 # https://towardsdatascience.com/intuitively-understanding-variational-autoencoders-1bfe67eb5daf
@@ -63,6 +64,7 @@ class NewThreeEncoderArchitecture:
                                              validation_data: Tuple,
                                              embedding_dimension: int,
                                              amount_of_layers: dict,
+                                             folder: str,
                                              activation='relu',
                                              learning_rate: float = 1e-3,
                                              optimizer: str = "adam"):
@@ -139,9 +141,8 @@ class NewThreeEncoderArchitecture:
         term_nan = TerminateOnNaN()
         callbacks.append(term_nan)
 
-        # csv_logger = CSVLogger(Path.joinpath("results", 'training.log'),
-        #                       separator='\t')
-        # callbacks.append(csv_logger)
+        csv_logger = CSVLogger(os.path.join(folder, 'training.log'), separator='\t')
+        callbacks.append(csv_logger)
 
         self._vae = NewThreeEncoderVAE(self._coding_gene_encoder, self._non_coding_gene_encoder,
                                        self._molecular_fingerprints_encoder,

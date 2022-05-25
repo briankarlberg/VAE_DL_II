@@ -1,3 +1,4 @@
+import os.path
 from keras import layers, regularizers
 import pandas as pd
 import keras
@@ -23,6 +24,7 @@ class ThreeEncoderArchitecture:
                                              embedding_dimension: int,
                                              amount_of_layers: dict,
                                              activation='relu',
+                                             folder: str,
                                              learning_rate: float = 1e-3,
                                              optimizer: str = "adam"):
         """
@@ -115,9 +117,9 @@ class ThreeEncoderArchitecture:
         term_nan = TerminateOnNaN()
         callbacks.append(term_nan)
 
-        # csv_logger = CSVLogger(Path.joinpath("results", 'training.log'),
-        #                       separator='\t')
-        # callbacks.append(csv_logger)
+        csv_logger = CSVLogger(os.path.join(folder, 'training.log'),
+                               separator='\t')
+        callbacks.append(csv_logger)
 
         vae = ThreeEncoderVAE(encoder, decoder)
         vae.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate))
