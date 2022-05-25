@@ -13,7 +13,8 @@ Command line args
 4  scaling: min or s  
 5  model: o or n   
 
-standard scaler does not use feature range
+Operations notes:
+scancel JOBID
 
 Generic gpu call on 5 sample files, 2022-05-25
 sbatch LSE.sh data/coding_5.tsv data/noncod_5.tsv data/morgan_5.tsv min o
@@ -23,4 +24,8 @@ sbatch LatentSpaceExploration.sh data/coding_5.tsv data/noncod_5.tsv data/morgan
 
 For 500 sample files, moved to 500_sample sub dir in data
 sbatch LatentSpaceExploration.sh data/coding_1.tsv data/noncod_1.tsv data/morgan_1.tsv min o
+
+Application development notes:
+
+standard scaler does not use feature range
 
