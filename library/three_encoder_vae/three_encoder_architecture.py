@@ -23,8 +23,8 @@ class ThreeEncoderArchitecture:
                                              validation_data: Tuple,
                                              embedding_dimension: int,
                                              amount_of_layers: dict,
-                                             activation='relu',
                                              folder: str,
+                                             activation='relu',
                                              learning_rate: float = 1e-3,
                                              optimizer: str = "adam"):
         """

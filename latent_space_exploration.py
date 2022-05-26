@@ -5,7 +5,7 @@ from library.preprocessing.splits import SplitHandler
 from library.preprocessing.preprocessing import Preprocessing
 from library.three_encoder_vae.three_encoder_architecture import ThreeEncoderArchitecture
 from library.plotting.plots import Plotting
-from library.new_three_encoder_vae.three_encoder_architecture import NewThreeEncoderArchitecture
+from library.multi_three_encoder_vae.multi_three_encoder_architecture import MultiThreeEncoderArchitecture
 from pathlib import Path
 from library.data.folder_management import FolderManagement
 
@@ -68,10 +68,12 @@ if __name__ == '__main__':
                                                                     method=args.scaling)
 
     amount_of_layers: dict = {
-        "coding_genes": [coding_gene_data.shape[1], 15000, 10000, 5000, 2500, 1000, 500, 200],
-        "non_coding_genes": [non_coding_gene_data.shape[1], 30000, 25000, 20000, 15000, 10000, 5000, 2500, 1000, 500,
-                             200],
-        "molecular_fingerprint": [molecular_fingerprint_train_data.shape[1], 1000, 500, 200],
+        "coding_genes": [coding_gene_data.shape[1], coding_gene_data.shape[1] / 2, coding_gene_data.shape[1] / 3,
+                         coding_gene_data.shape[1] / 4],
+        "non_coding_genes": [non_coding_gene_data.shape[1], coding_gene_data.shape[1] / 2,
+                             coding_gene_data.shape[1] / 3, coding_gene_data.shape[1] / 4],
+        "molecular_fingerprint": [molecular_fingerprint_train_data.shape[1], coding_gene_data.shape[1] / 2,
+                                  coding_gene_data.shape[1] / 3, coding_gene_data.shape[1] / 4],
     }
 
     if args.model == 'o':
@@ -85,7 +87,7 @@ if __name__ == '__main__':
         )
 
     else:
-        vae: NewThreeEncoderArchitecture = NewThreeEncoderArchitecture()
+        vae: MultiThreeEncoderArchitecture = MultiThreeEncoderArchitecture()
         vae.build_three_variational_auto_encoder(
             training_data=(coding_gene_train_data, non_coding_gene_train_data, molecular_fingerprint_train_data),
             validation_data=(

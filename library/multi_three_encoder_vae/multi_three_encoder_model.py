@@ -4,11 +4,10 @@ from keras.models import Model
 from typing import Tuple
 
 
-class NewThreeEncoderVAE(keras.Model):
+class MultiThreeEncoderVAE(keras.Model):
     def __init__(self, coding_encoder, non_coding_encoder, mf_encoder, coding_decoder, non_coding_decoder, mf_decoder,
                  **kwargs):
-        # TODO: add params for shapes of the data, to make it more generic in the call step
-        super(NewThreeEncoderVAE, self).__init__(**kwargs)
+        super(MultiThreeEncoderVAE, self).__init__(**kwargs)
         self.coding_encoder = coding_encoder
         self.non_coding_encoder = non_coding_encoder
         self.mf_encoder = mf_encoder
@@ -43,6 +42,7 @@ class NewThreeEncoderVAE(keras.Model):
 
             total_reconstruction_loss = coding_recon_loss + non_coding_recon_loss + mf_recon_loss
             total_kl_loss = coding_kl_loss + non_coding_kl_loss + mf_kl_loss
+
             total_loss = total_reconstruction_loss + total_kl_loss
 
         grads = tape.gradient(total_loss, self.trainable_weights)
@@ -63,6 +63,8 @@ class NewThreeEncoderVAE(keras.Model):
             non_coding_genes = inputs[1]
             molecular_fingerprints = inputs[2]
         else:
+            tf.print(inputs)
+            input()
             coding_genes = inputs
             non_coding_genes = inputs
             molecular_fingerprints = inputs

@@ -1,9 +1,9 @@
 from keras import layers, regularizers
 import pandas as pd
 import keras
-from library.new_three_encoder_vae.three_encoder_model import NewThreeEncoderVAE
-from library.new_three_encoder_vae.sampling import Sampling
-from keras.layers import Dense
+from library.multi_three_encoder_vae.multi_three_encoder_model import MultiThreeEncoderVAE
+from library.multi_three_encoder_vae.sampling import Sampling
+from keras.layers import Dense, Dropout, Input
 import tensorflow as tf
 from tensorflow.keras.models import Model
 from typing import Tuple
@@ -14,7 +14,7 @@ import os
 # https://towardsdatascience.com/intuitively-understanding-variational-autoencoders-1bfe67eb5daf
 
 
-class NewThreeEncoderArchitecture:
+class MultiThreeEncoderArchitecture:
 
     def __init__(self):
         self._coding_gene_encoder: Model = None
@@ -144,25 +144,15 @@ class NewThreeEncoderArchitecture:
         csv_logger = CSVLogger(os.path.join(folder, 'training.log'), separator='\t')
         callbacks.append(csv_logger)
 
-        self._vae = NewThreeEncoderVAE(self._coding_gene_encoder, self._non_coding_gene_encoder,
-                                       self._molecular_fingerprints_encoder,
-                                       self._coding_gene_decoder, self._non_coding_gene_decoder,
-                                       self._molecular_fingerprints_decoder)
-        self._vae.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate))
-
-        # if self._plot_model:
-        #    plotter: Plotting = Plotting(base_path=self._base_path)
-        #    plotter.plot_model_architecture(encoder, "encoder.png")
-        #    plotter.plot_model_architecture(decoder, "decoder.png")
-        # plot_model(encoder, "encoder.png", show_shapes=True)
-        # plot_model(decoder, "decoder.png", show_shapes=True)
-        # input()
+        self._vae = MultiThreeEncoderVAE(self._coding_gene_encoder, self._non_coding_gene_encoder,
+                                         self._molecular_fingerprints_encoder,
+                                         self._coding_gene_decoder, self._non_coding_gene_decoder,
+                                         self._molecular_fingerprints_decoder)
+        self._vae.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate), run_eagerly=True)
+        # self._vae.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate))
 
         self._history = self._vae.fit(
-            [coding_gene_training_data, non_coding_gene_training_data, molecular_fingerprints_training_data],
-            validation_data=(
-                [coding_gene_validation_data, non_coding_gene_validation_data, molecular_fingerprints_validation_data],
-                [coding_gene_validation_data, non_coding_gene_validation_data, molecular_fingerprints_validation_data]),
+            x=[coding_gene_training_data, non_coding_gene_training_data, molecular_fingerprints_training_data],
             epochs=500,
             callbacks=callbacks,
             batch_size=256,
@@ -184,12 +174,13 @@ class NewThreeEncoderArchitecture:
         @return:
         """
 
-        inputs = keras.Input(shape=(input_dimensions,))
+        inputs = Input(shape=(input_dimensions,))
         x = inputs
 
         for i, layer in enumerate(layer_dimensions):
-            x = layers.Dense(layer, activation=activation, activity_regularizer=r,
-                             name=f"{model_name}_layer_{i}")(x)
+            x = Dense(layer, activation=activation, activity_regularizer=r,
+                      name=f"{model_name}_layer_{i}")(x)
+            x = Dropout(0.3, name=f"{model_name}_layer_{i}_dropout")(x)
 
         z_mean = Dense(embedding_dimensions, name=f'{model_name}_z_mean')(x)
         z_log_var = Dense(embedding_dimensions, name=f'{model_name}_z_log_var')(x)
