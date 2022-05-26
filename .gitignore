@@ -12,3 +12,4 @@ data/RFE_100/*
 *.csv
 output_reports/
 error_reports/
+latent_space_generation

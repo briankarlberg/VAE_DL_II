@@ -2,13 +2,13 @@ import tensorflow as tf
 from tensorflow import keras
 from keras.models import Model
 from typing import Tuple
+from tensorflow.keras.layers import Multiply
 
 
-class NewThreeEncoderVAE(keras.Model):
+class MultiThreeEncoderVAE(keras.Model):
     def __init__(self, coding_encoder, non_coding_encoder, mf_encoder, coding_decoder, non_coding_decoder, mf_decoder,
                  **kwargs):
-        # TODO: add params for shapes of the data, to make it more generic in the call step
-        super(NewThreeEncoderVAE, self).__init__(**kwargs)
+        super(MultiThreeEncoderVAE, self).__init__(**kwargs)
         self.coding_encoder = coding_encoder
         self.non_coding_encoder = non_coding_encoder
         self.mf_encoder = mf_encoder
@@ -43,6 +43,7 @@ class NewThreeEncoderVAE(keras.Model):
 
             total_reconstruction_loss = coding_recon_loss + non_coding_recon_loss + mf_recon_loss
             total_kl_loss = coding_kl_loss + non_coding_kl_loss + mf_kl_loss
+
             total_loss = total_reconstruction_loss + total_kl_loss
 
         grads = tape.gradient(total_loss, self.trainable_weights)
@@ -63,17 +64,20 @@ class NewThreeEncoderVAE(keras.Model):
             non_coding_genes = inputs[1]
             molecular_fingerprints = inputs[2]
         else:
+            tf.print(inputs)
+            input()
             coding_genes = inputs
             non_coding_genes = inputs
             molecular_fingerprints = inputs
 
         _, _, coding_z = self.coding_encoder(coding_genes)
         _, _, non_coding_z = self.non_coding_encoder(non_coding_genes)
-        _, _, molecular_fingerprints_z = self.mf_encoder(molecular_fingerprints
-                                                         )
+        _, _, molecular_fingerprints_z = self.mf_encoder(molecular_fingerprints)
 
-        return self.coding_decoder(coding_z), self.non_coding_decoder(non_coding_z), self.mf_decoder(
-            molecular_fingerprints_z)
+        # decoder_output = self._decoder(Multiply()([self._marker_encoder.output[2], self._morph_encoder.output[2]]))
+        z = Multiply()(coding_z, non_coding_z, molecular_fingerprints_z)
+
+        return self.coding_decoder(z), self.non_coding_decoder(z), self.mf_decoder(z)
 
     def calculate_loss(self, encoder: Model, decoder: Model, data) -> Tuple:
         z_mean, z_log_var, z = encoder(data)
