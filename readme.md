@@ -18,6 +18,10 @@ scancel JOBID
 
 2022-06-06
 
+sbatch LatentSpaceExploration.sh data/coding_5.tsv data/noncod_5.tsv data/morgan_5.tsv 1000
+
+sbatch LatentSpaceExploration.sh -cg data/coding_5.tsv -ncg data/noncod_5.tsv -mf data/morgan_5.tsv -lt 1000
+
 python3 latent_space_exploration.py -cg $1 -ncg $2 -mf $3 -s $4 -m $5
 
 sbatch LSE.sh -cg data/coding_5.tsv -ncg data/noncod_5.tsv -mf data/morgan_5.tsv -lt 1000
@@ -30,6 +34,7 @@ usage: latent_space_exploration.py [-h] -cg CODING_GENES -ncg NON_CODING_GENES
                                    [-r RESPONSE_DATA] -lt LATENT_SPACE
                                    [-s {min,s}] [-m {o,n,r}]
 latent_space_exploration.py: error: argument -s/--scaling: expected one argument
+
 gpu:2
 #SBATCH --gres=gpu:1
 
