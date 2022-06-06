@@ -16,6 +16,9 @@ Command line args
 Operations notes:
 scancel JOBID
 
+gpu:2
+#SBATCH --gres=gpu:1
+
 Generic gpu call on 5 sample files, 2022-05-25
 sbatch LSE.sh data/coding_5.tsv data/noncod_5.tsv data/morgan_5.tsv min o
 
