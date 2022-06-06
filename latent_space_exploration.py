@@ -44,10 +44,12 @@ if __name__ == '__main__':
     non_coding_gene_data: pd.DataFrame = DataLoader.load_data(args.non_coding_genes)
     molecular_fingerprint_data: pd.DataFrame = DataLoader.load_data(args.molecular_fingerprint)
 
+    # Create split
     coding_gene_train_data, coding_gene_validation_data = SplitHandler.create_splits(input_data=coding_gene_data,
                                                                                      without_val=True)
     non_coding_gene_train_data, non_coding_gene_validation_data = SplitHandler.create_splits(
         input_data=non_coding_gene_data, without_val=True)
+
     molecular_fingerprint_train_data, molecular_fingerprint_validation_data = SplitHandler.create_splits(
         input_data=molecular_fingerprint_data, without_val=True)
 
@@ -131,3 +133,4 @@ if __name__ == '__main__':
 
     plotter: Plotting = Plotting(base_path=str(base_path))
     plotter.plot_model_performance(history=history, file_name="Model History")
+

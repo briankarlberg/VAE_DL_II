@@ -212,4 +212,4 @@ class MultiThreeEncoderArchitecture:
             x = layers.Dense(layer, activation=activation, activity_regularizer=r,
                              name=f"{model_name}_layer_{i}")(x)
 
-        return Model(inputs, x, name=model_name)
+        return Model(inputs=inputs, outputs=x, name=model_name)
