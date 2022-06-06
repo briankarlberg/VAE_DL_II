@@ -65,7 +65,6 @@ class MultiThreeEncoderVAE(keras.Model):
             molecular_fingerprints = inputs[2]
         else:
             tf.print(inputs)
-            input()
             coding_genes = inputs
             non_coding_genes = inputs
             molecular_fingerprints = inputs
