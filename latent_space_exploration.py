@@ -132,5 +132,4 @@ if __name__ == '__main__':
         raise ValueError("Please specify a model to run")
 
     plotter: Plotting = Plotting(base_path=str(base_path))
-    plotter.plot_model_performance(history=history, file_name="Model History")
-
+    plotter.plot_model_performance(history=history, file_name="model_history")
