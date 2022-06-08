@@ -84,6 +84,13 @@ if __name__ == '__main__':
                                   coding_gene_data.shape[1] / 3, coding_gene_data.shape[1] / 4, latent_space]
     }
 
+test_variable = 0
+loss_inspection = 'Here is line 87 in latent_space_exploration.py'
+inspectDF['Variable value at point in script'] = [test_variable]
+inspectDF['Message from script'] = [loss_inspection]
+inspectDF.to_csv('inspectDF_'+inspection_version+'_.tsv',
+                sep = '\t')
+
     if args.model == 'o':
         vae: ThreeEncoderArchitecture = ThreeEncoderArchitecture()
         model, encoder, decoder, history = vae.build_three_variational_auto_encoder(

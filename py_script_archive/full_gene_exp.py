@@ -2,7 +2,7 @@ import pandas as pd
 import argparse
 from pathlib import Path
 
-results_path = Path("results")
+results_path = Path("../results")
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--drug_index", "-di", action="store",
@@ -57,4 +57,4 @@ if not results_path.exists():
     results_path.mkdir(parents=True, exist_ok=True)
 
 # Write data frame to results folder
-vae_in.to_csv(Path(results_path, 'full_expression_test.tsv'), sep='\t', index=False)
+vae_in.to_csv(Path(results_path, '../full_expression_test.tsv'), sep='\t', index=False)

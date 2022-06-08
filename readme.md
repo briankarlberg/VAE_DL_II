@@ -16,6 +16,27 @@ Command line args
 Operations notes:
 scancel JOBID
 
+2022-06-08
+Put all old shell scripts into 'shell_script_archive' folder
+What is the purpose of the 'src' folder? (appears to be empty folders)
+List of files containing loss calc variables:
+    'MultiThreeEncoderArchitecture'
+    [don't see loss in 'ThreeEncoderArchitecture'
+    bunch of losses in 'regression_vae.py'
+
+Tracing loss depends on args.model argument 'o', 'n', or 'r'
+    This is lines 87, 97, 109 in 'latent_space_exploration.py'
+^ Potential break point
+
+* Need schematic of script file interactions
+  * start with 'latent_space_exploration.py'
+    * This loads from 'ThreeEncoderArchitecture'
+    * and 'MultiThreeEncoderArchitecture'
+    * also 'regression_vae.py'
+
+Need to rename or remove 'sample_data' directory
+Then deal with 'full_expression_test' files
+ 
 2022-06-07
 
 sbatch LatentSpaceExploration.sh data/coding_1000.tsv data/noncod_1000.tsv data/morgan_1000.tsv 1000

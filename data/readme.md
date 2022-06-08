@@ -1,4 +1,4 @@
 # Data folder
 
-Please add your test data in here.  
+Add data files here.  
 All data in data folder will be ignored by git.
