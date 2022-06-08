@@ -16,6 +16,10 @@ Command line args
 Operations notes:
 scancel JOBID
 
+2022-06-07
+
+sbatch LatentSpaceExploration.sh data/coding_1000.tsv data/noncod_1000.tsv data/morgan_1000.tsv 1000
+
 2022-06-06
 
 sbatch LatentSpaceExploration.sh data/coding_5.tsv data/noncod_5.tsv data/morgan_5.tsv 1000
