@@ -1,5 +1,6 @@
 import os.path
 from keras import layers, regularizers
+from tensorflow.keras.layers import Dense, Input, Dropout
 import pandas as pd
 import keras
 from library.three_encoder_vae.sampling import Sampling
@@ -52,17 +53,20 @@ class ThreeEncoderArchitecture:
 
         # Switch network when layers are redefined
 
-        coding_gene_encoder: Model = ThreeEncoderArchitecture.__create_sub_model(
+        coding_gene_encoder: Model = ThreeEncoderArchitecture.__create_encoder_model(
             input_dimensions=coding_gene_training_data.shape[1], activation=activation,
-            layer_dimensions=coding_gene_layers, r=r, model_name="coding_genes_encoder")
+            layer_dimensions=coding_gene_layers, r=r, model_name="coding_genes_encoder",
+            embedding_dimension=embedding_dimension)
 
-        non_coding_gene_encoder = ThreeEncoderArchitecture.__create_sub_model(
+        non_coding_gene_encoder = ThreeEncoderArchitecture.__create_encoder_model(
             input_dimensions=non_coding_gene_training_data.shape[1], activation=activation,
-            layer_dimensions=non_coding_gene_layers, r=r, model_name="non_coding_genes_encoder")
+            layer_dimensions=non_coding_gene_layers, r=r, model_name="non_coding_genes_encoder",
+            embedding_dimension=embedding_dimension)
 
-        molecular_fingerprints_encoder = ThreeEncoderArchitecture.__create_sub_model(
+        molecular_fingerprints_encoder = ThreeEncoderArchitecture.__create_encoder_model(
             input_dimensions=molecular_fingerprints_training_data.shape[1], activation=activation,
-            layer_dimensions=molecular_fingerprint_layers, r=r, model_name="molecular_fingerprint_encoder")
+            layer_dimensions=molecular_fingerprint_layers, r=r, model_name="molecular_fingerprint_encoder",
+            embedding_dimension=embedding_dimension)
 
         combined_input = concatenate(
             [coding_gene_encoder.output, non_coding_gene_encoder.output, molecular_fingerprints_encoder.output])
@@ -82,19 +86,19 @@ class ThreeEncoderArchitecture:
         non_coding_gene_layers.reverse()
         molecular_fingerprint_layers.reverse()
 
-        coding_gene_decoder: Model = ThreeEncoderArchitecture.__create_sub_model(
+        coding_gene_decoder: Model = ThreeEncoderArchitecture.__create_decoder_model(
             input_dimensions=embedding_dimension, activation=activation,
             layer_dimensions=coding_gene_layers, r=r, model_name="coding_genes_decoder")
 
         coding_gene_decoder.summary()
 
-        non_coding_gene_decoder: Model = ThreeEncoderArchitecture.__create_sub_model(
+        non_coding_gene_decoder: Model = ThreeEncoderArchitecture.__create_decoder_model(
             input_dimensions=embedding_dimension, activation=activation,
             layer_dimensions=non_coding_gene_layers, r=r, model_name="non_coding_genes_decoder")
 
         non_coding_gene_decoder.summary()
 
-        molecular_fingerprints_decoder: Model = ThreeEncoderArchitecture.__create_sub_model(
+        molecular_fingerprints_decoder: Model = ThreeEncoderArchitecture.__create_decoder_model(
             input_dimensions=embedding_dimension, activation=activation,
             layer_dimensions=molecular_fingerprint_layers, r=r, model_name="molecular_fingerprint_decoder")
 
@@ -146,8 +150,8 @@ class ThreeEncoderArchitecture:
         return vae, encoder, decoder, history
 
     @staticmethod
-    def __create_sub_model(input_dimensions: int, activation: str, r: int, layer_dimensions: list,
-                           model_name: str):
+    def __create_encoder_model(input_dimensions: int, activation: str, r: int, layer_dimensions: list,
+                               embedding_dimension: int, model_name: str):
         """
         Create the model for the markers
         @param input_dimensions:
@@ -166,5 +170,34 @@ class ThreeEncoderArchitecture:
         for i, layer in enumerate(layer_dimensions):
             x = layers.Dense(layer, activation=activation, activity_regularizer=r,
                              name=f"{model_name}_layer_{i}")(x)
+            x = Dropout(0.2)(x)
 
-        return Model(inputs, x, name=model_name)
+        z_mean = layers.Dense(embedding_dimension, name="z_mean")(x)
+        z_log_var = layers.Dense(embedding_dimension, name="z_log_var")(x)
+        z = Sampling()([z_mean, z_log_var])
+
+        return Model(inputs=inputs, outputs=[z_mean, z_log_var, z], name=model_name)
+
+    @staticmethod
+    def __create_decoder_model(input_dimensions: int, activation: str, r: int, layer_dimensions: list,
+                               model_name: str):
+        """
+
+        @param input_dimensions:
+        @param layer_dimensions: A list of layers dimensions
+        The value is the amount of dimensions. e.g. [200,100,50] will create 3 layers.
+        One with 200 dimensions, another with 100 and a third with 50 dimensions
+        @param activation:
+        @param model_name:
+        @param r:
+        @return:
+        """
+
+        inputs = keras.Input(shape=(input_dimensions,))
+        x = inputs
+
+        for i, layer in enumerate(layer_dimensions):
+            x = layers.Dense(layer, activation=activation, activity_regularizer=r,
+                             name=f"{model_name}_layer_{i}")(x)
+
+        return Model(inputs=inputs, ouputs=x, name=model_name)
