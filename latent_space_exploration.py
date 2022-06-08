@@ -33,6 +33,7 @@ def get_args():
     parser.add_argument("-m", "--model", action="store", required=False, choices=["o", "n", "r"], default="o")
     return parser.parse_args()
 
+inspection_version = '2022-06-08'
 test_variable = 0
 loss_inspection = 'Here is line 37 in latent_space_exploration.py'
 inspectDF = pd.DataFrame()
