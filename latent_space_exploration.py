@@ -33,6 +33,14 @@ def get_args():
     parser.add_argument("-m", "--model", action="store", required=False, choices=["o", "n", "r"], default="o")
     return parser.parse_args()
 
+inspection_version = '2022-06-08'
+test_variable = 0
+loss_inspection = 'Here is line 37 in latent_space_exploration.py'
+inspectDF = pd.DataFrame()
+inspectDF['Variable value at point in script'] = [test_variable]
+inspectDF['Message from script'] = [loss_inspection]
+inspectDF.to_csv('inspectDF_'+inspection_version+'_.tsv',
+                sep = '\t')
 
 if __name__ == '__main__':
     args = get_args()
@@ -83,13 +91,6 @@ if __name__ == '__main__':
         "molecular_fingerprint": [molecular_fingerprint_train_data.shape[1], coding_gene_data.shape[1] / 2,
                                   coding_gene_data.shape[1] / 3, coding_gene_data.shape[1] / 4, latent_space]
     }
-
-test_variable = 0
-loss_inspection = 'Here is line 87 in latent_space_exploration.py'
-inspectDF['Variable value at point in script'] = [test_variable]
-inspectDF['Message from script'] = [loss_inspection]
-inspectDF.to_csv('inspectDF_'+inspection_version+'_.tsv',
-                sep = '\t')
 
     if args.model == 'o':
         vae: ThreeEncoderArchitecture = ThreeEncoderArchitecture()
