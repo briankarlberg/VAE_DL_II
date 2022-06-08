@@ -35,6 +35,7 @@ def get_args():
 
 test_variable = 0
 loss_inspection = 'Here is line 37 in latent_space_exploration.py'
+inspectDF = pd.DataFrame()
 inspectDF['Variable value at point in script'] = [test_variable]
 inspectDF['Message from script'] = [loss_inspection]
 inspectDF.to_csv('inspectDF_'+inspection_version+'_.tsv',
