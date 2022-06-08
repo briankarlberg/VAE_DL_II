@@ -14,9 +14,12 @@ Command line args
 5  model: o or n   
 
 Operations notes:
+cd /home/groups/EllrottLab/drug_resp/VAE/VAE_DL_II/
 scancel JOBID
 
 2022-06-08
+sbatch test_lse.sh data/5_samples/coding_5.tsv data/5_samples/noncod_5.tsv data/5_samples/morgan_5.tsv 1000
+
 Put all old shell scripts into 'shell_script_archive' folder
 What is the purpose of the 'src' folder? (appears to be empty folders)
 List of files containing loss calc variables:
