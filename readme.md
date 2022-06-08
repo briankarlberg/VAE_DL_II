@@ -18,6 +18,8 @@ cd /home/groups/EllrottLab/drug_resp/VAE/VAE_DL_II/
 scancel JOBID
 
 2022-06-08
+sbatch lse_500.sh data/500_samples_v1/coding_1.tsv data/500_samples_v1/noncod_1.tsv data/500_samples_v1/morgan_1.tsv 1000
+
 sbatch test_lse.sh data/5_samples/coding_5.tsv data/5_samples/noncod_5.tsv data/5_samples/morgan_5.tsv 1000
 
 Put all old shell scripts into 'shell_script_archive' folder

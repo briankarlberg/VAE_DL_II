@@ -33,13 +33,13 @@ def get_args():
     parser.add_argument("-m", "--model", action="store", required=False, choices=["o", "n", "r"], default="o")
     return parser.parse_args()
 
-inspection_version = '2022-06-08'
+inspection_version = '2022-06-08_run2'
 test_variable = 0
 loss_inspection = 'Here is line 37 in latent_space_exploration.py'
 inspectDF = pd.DataFrame()
 inspectDF['Variable value at point in script'] = [test_variable]
 inspectDF['Message from script'] = [loss_inspection]
-inspectDF.to_csv('inspectDF_'+inspection_version+'_.tsv',
+inspectDF.to_csv('inspectDF_'+inspection_version+'.tsv',
                 sep = '\t')
 
 if __name__ == '__main__':
