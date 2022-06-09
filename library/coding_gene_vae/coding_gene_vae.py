@@ -18,6 +18,10 @@ class CodingGeneVae:
         self._vae = None
         self._history = None
 
+    @property
+    def history(self):
+        return self._history
+
     def __build_encoder(self, layers: int, input_dimensions: int) -> Model:
         input_layer = Input(shape=(input_dimensions,), name="Encoder Input")
 

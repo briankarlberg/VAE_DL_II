@@ -9,6 +9,7 @@ from library.multi_three_encoder_vae.multi_three_encoder_architecture import Mul
 from pathlib import Path
 from library.data.folder_management import FolderManagement
 from library.regression_vae.regression_vae import RegressionVAE
+from library.coding_gene_vae.coding_gene_vae import CodingGeneVae
 
 base_path = Path("latent_space_generation")
 
@@ -30,8 +31,9 @@ def get_args():
                         help="Defines the latent space dimensions")
     parser.add_argument("-s", "--scaling", action="store", required=False,
                         help="Which type of scaling should be used", choices=["min", "s"], default="s")
-    parser.add_argument("-m", "--model", action="store", required=False, choices=["o", "n", "r"], default="o")
+    parser.add_argument("-m", "--model", action="store", required=False, choices=["o", "n", "r", "cg"], default="o")
     return parser.parse_args()
+
 
 inspection_version = '2022-06-08_run2'
 test_variable = 0
@@ -39,8 +41,8 @@ loss_inspection = 'Here is line 37 in latent_space_exploration.py'
 inspectDF = pd.DataFrame()
 inspectDF['Variable value at point in script'] = [test_variable]
 inspectDF['Message from script'] = [loss_inspection]
-inspectDF.to_csv('inspectDF_'+inspection_version+'.tsv',
-                sep = '\t')
+inspectDF.to_csv('inspectDF_' + inspection_version + '.tsv',
+                 sep='\t')
 
 if __name__ == '__main__':
     args = get_args()
@@ -133,6 +135,15 @@ if __name__ == '__main__':
             amount_of_layers=amount_of_layers,
             embedding_dimension=latent_space, folder=str(base_path),
             target_value=y)
+
+        history = vae.history
+        
+    elif args.model == 'cg':
+        vae: CodingGeneVae = CodingGeneVae(embedding_dimension=latent_space, layer_count=3,
+                                           input_dimension=coding_gene_train_data.shape[1])
+        vae.build_model()
+        vae.train(training_data=coding_gene_train_data, validation_data=coding_gene_validation_data,
+                  save_path=str(base_path))
 
         history = vae.history
 
