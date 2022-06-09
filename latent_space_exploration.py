@@ -73,7 +73,7 @@ if __name__ == '__main__':
     if not base_path.exists():
         FolderManagement.create_directory(base_path)
 
-    latent_space: int = args.latent_space
+    latent_space: int = int(args.latent_space)
 
     if args.model == 'o' or args.model == 'n':
 
