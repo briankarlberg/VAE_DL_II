@@ -10,6 +10,7 @@ from pathlib import Path
 from library.data.folder_management import FolderManagement
 from library.regression_vae.regression_vae import RegressionVAE
 from library.coding_gene_vae.coding_gene_vae import CodingGeneVae
+from typing import Tuple
 
 base_path = Path("latent_space_generation")
 
@@ -20,10 +21,11 @@ def get_args():
        """
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("-cg", "--coding_genes", action="store", required=True, help="The file to use for coding genes")
-    parser.add_argument("-ncg", "--non_coding_genes", action="store", required=True,
+    parser.add_argument("-cg", "--coding_genes", action="store", required=False,
+                        help="The file to use for coding genes")
+    parser.add_argument("-ncg", "--non_coding_genes", action="store", required=False,
                         help="The file to use for non coding gene")
-    parser.add_argument("-mf", "--molecular_fingerprint", action="store", required=True,
+    parser.add_argument("-mf", "--molecular_fingerprint", action="store", required=False,
                         help="The file to use for the molecular fingerprint")
     parser.add_argument("-r", "--response_data", action="store", required=False,
                         help="The file containing the response data ")
@@ -44,101 +46,85 @@ inspectDF['Message from script'] = [loss_inspection]
 inspectDF.to_csv('inspectDF_' + inspection_version + '.tsv',
                  sep='\t')
 
+
+def load_data(file_path: str) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    data: pd.DataFrame = DataLoader.load_data(file_name=file_path)
+
+    # Create split
+    train_data, validation_data = SplitHandler.create_splits(input_data=data,
+                                                             without_val=True)
+
+    # Normalize
+    train_data = Preprocessing.normalize(data=train_data,
+                                         features=train_data.columns.tolist(),
+                                         method=args.scaling)
+    validation_data = Preprocessing.normalize(data=validation_data,
+                                              features=validation_data.columns.tolist(),
+                                              method=args.scaling)
+
+    return train_data, validation_data
+
+
 if __name__ == '__main__':
     args = get_args()
 
     if not base_path.exists():
         FolderManagement.create_directory(base_path)
 
-    coding_gene_data: pd.DataFrame = DataLoader.load_data(args.coding_genes)
-    non_coding_gene_data: pd.DataFrame = DataLoader.load_data(args.non_coding_genes)
-    molecular_fingerprint_data: pd.DataFrame = DataLoader.load_data(args.molecular_fingerprint)
-
-    # Create split
-    coding_gene_train_data, coding_gene_validation_data = SplitHandler.create_splits(input_data=coding_gene_data,
-                                                                                     without_val=True)
-    non_coding_gene_train_data, non_coding_gene_validation_data = SplitHandler.create_splits(
-        input_data=non_coding_gene_data, without_val=True)
-
-    molecular_fingerprint_train_data, molecular_fingerprint_validation_data = SplitHandler.create_splits(
-        input_data=molecular_fingerprint_data, without_val=True)
-
-    # Normalize
-    coding_gene_train_data = Preprocessing.normalize(data=coding_gene_train_data,
-                                                     features=coding_gene_data.columns.tolist(), method=args.scaling)
-    coding_gene_validation_data = Preprocessing.normalize(data=coding_gene_validation_data,
-                                                          features=coding_gene_data.columns.tolist(),
-                                                          method=args.scaling)
-
-    non_coding_gene_train_data = Preprocessing.normalize(data=non_coding_gene_train_data,
-                                                         features=non_coding_gene_data.columns.tolist(),
-                                                         method=args.scaling)
-    non_coding_gene_validation_data = Preprocessing.normalize(data=non_coding_gene_validation_data,
-                                                              features=non_coding_gene_data.columns.tolist(),
-                                                              method=args.scaling)
-
-    molecular_fingerprint_train_data = Preprocessing.normalize(data=molecular_fingerprint_train_data,
-                                                               features=molecular_fingerprint_data.columns.tolist(),
-                                                               method=args.scaling)
-    molecular_fingerprint_validation_data = Preprocessing.normalize(data=molecular_fingerprint_validation_data,
-                                                                    features=molecular_fingerprint_data.columns.tolist(),
-                                                                    method=args.scaling)
-
     latent_space: int = args.latent_space
-    amount_of_layers: dict = {
-        "coding_genes": [coding_gene_data.shape[1], coding_gene_data.shape[1] / 2, coding_gene_data.shape[1] / 3,
-                         coding_gene_data.shape[1] / 4, latent_space],
-        "non_coding_genes": [non_coding_gene_data.shape[1], coding_gene_data.shape[1] / 2,
-                             coding_gene_data.shape[1] / 3, coding_gene_data.shape[1] / 4, latent_space],
-        "molecular_fingerprint": [molecular_fingerprint_train_data.shape[1], coding_gene_data.shape[1] / 2,
-                                  coding_gene_data.shape[1] / 3, coding_gene_data.shape[1] / 4, latent_space]
-    }
 
-    if args.model == 'o':
-        vae: ThreeEncoderArchitecture = ThreeEncoderArchitecture()
-        model, encoder, decoder, history = vae.build_three_variational_auto_encoder(
-            training_data=(coding_gene_train_data, non_coding_gene_train_data, molecular_fingerprint_train_data),
-            validation_data=(
-                coding_gene_validation_data, non_coding_gene_validation_data, molecular_fingerprint_validation_data),
-            amount_of_layers=amount_of_layers,
-            embedding_dimension=latent_space, folder=str(base_path)
-        )
+    if args.model == 'o' or args.model == 'n':
 
-    elif args.model == 'n':
-        vae: MultiThreeEncoderArchitecture = MultiThreeEncoderArchitecture()
-        vae.build_three_variational_auto_encoder(
-            training_data=(coding_gene_train_data, non_coding_gene_train_data, molecular_fingerprint_train_data),
-            validation_data=(
-                coding_gene_validation_data, non_coding_gene_validation_data, molecular_fingerprint_validation_data),
-            amount_of_layers=amount_of_layers,
-            embedding_dimension=latent_space, folder=str(base_path)
-        )
+        coding_gene_train_data, coding_gene_validation_data = load_data(args.coding_genes)
+        non_coding_gene_train_data, non_coding_gene_validation_data = load_data(args.non_coding_genes)
+        mf_train_data, mf_validation_data = load_data(args.molecular_fingerprint)
 
-        history = vae.history
+        amount_of_layers: dict = {
+            "coding_genes": [coding_gene_train_data.shape[1], coding_gene_train_data.shape[1] / 2,
+                             coding_gene_train_data.shape[1] / 3,
+                             coding_gene_train_data.shape[1] / 4, latent_space],
+            "non_coding_genes": [non_coding_gene_train_data.shape[1], non_coding_gene_train_data.shape[1] / 2,
+                                 non_coding_gene_train_data.shape[1] / 3, non_coding_gene_train_data.shape[1] / 4,
+                                 latent_space],
+            "molecular_fingerprint": [mf_train_data.shape[1], mf_train_data.shape[1] / 2,
+                                      mf_train_data.shape[1] / 3, mf_train_data.shape[1] / 4,
+                                      latent_space]
+        }
 
-    elif args.model == 'r':
+        if args.model == 'o':
+            vae: ThreeEncoderArchitecture = ThreeEncoderArchitecture()
+            model, encoder, decoder, history = vae.build_three_variational_auto_encoder(
+                training_data=(coding_gene_train_data, non_coding_gene_train_data, mf_train_data),
+                validation_data=(
+                    coding_gene_validation_data, non_coding_gene_validation_data,
+                    mf_validation_data),
+                amount_of_layers=amount_of_layers,
+                embedding_dimension=latent_space, folder=str(base_path)
+            )
 
-        if args.response_data is None:
-            raise ValueError("Please provide response data, when using the regression vae")
+        elif args.model == 'n':
+            vae: MultiThreeEncoderArchitecture = MultiThreeEncoderArchitecture()
+            vae.build_three_variational_auto_encoder(
+                training_data=(coding_gene_train_data, non_coding_gene_train_data, mf_train_data),
+                validation_data=(
+                    coding_gene_validation_data,
+                    non_coding_gene_validation_data,
+                    mf_validation_data),
+                amount_of_layers=amount_of_layers,
+                embedding_dimension=latent_space, folder=str(base_path)
+            )
 
-        y: pd.DataFrame = DataLoader.load_data(file_name=args.response_data)
+            history = vae.history
 
-        y = Preprocessing.normalize(data=y, features=y.columns.tolist(), method=args.scaling)
-
-        amount_of_layers["decoder"] = [latent_space, latent_space]
-
-        vae: RegressionVAE = RegressionVAE()
-        vae.build_regression_vae(
-            training_data=(coding_gene_train_data, non_coding_gene_train_data, molecular_fingerprint_train_data),
-            validation_data=(
-                coding_gene_validation_data, non_coding_gene_validation_data, molecular_fingerprint_validation_data),
-            amount_of_layers=amount_of_layers,
-            embedding_dimension=latent_space, folder=str(base_path),
-            target_value=y)
-
-        history = vae.history
 
     elif args.model == 'cg':
+
+        if args.coding_genes is None:
+            raise ValueError(
+                "Coding Gene VAE needs data. Please specify the data by using --coding_genes as an cli argument")
+
+        coding_gene_train_data, coding_gene_validation_data = load_data(args.coding_genes)
+
         vae: CodingGeneVae = CodingGeneVae(embedding_dimension=latent_space, layer_count=3,
                                            input_dimension=coding_gene_train_data.shape[1])
         vae.build_model()
