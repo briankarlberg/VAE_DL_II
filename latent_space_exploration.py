@@ -137,7 +137,7 @@ if __name__ == '__main__':
             target_value=y)
 
         history = vae.history
-        
+
     elif args.model == 'cg':
         vae: CodingGeneVae = CodingGeneVae(embedding_dimension=latent_space, layer_count=3,
                                            input_dimension=coding_gene_train_data.shape[1])
