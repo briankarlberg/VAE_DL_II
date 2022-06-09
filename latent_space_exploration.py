@@ -37,12 +37,14 @@ def get_args():
     return parser.parse_args()
 
 
-inspection_version = '2022-06-08_run2'
-test_variable = 0
-loss_inspection = 'Here is line 37 in latent_space_exploration.py'
+inspection_version = '2022-06-09_run0'
+test_variable = 9
+# loss_inspection = 'Here is line 42 in latent_space_exploration.py'
+template = 'Coding gene VAE test'
 inspectDF = pd.DataFrame()
+# inspectDF['Variable value at point in script'] = [test_variable]
 inspectDF['Variable value at point in script'] = [test_variable]
-inspectDF['Message from script'] = [loss_inspection]
+inspectDF['Message from script'] = [template]
 inspectDF.to_csv('inspectDF_' + inspection_version + '.tsv',
                  sep='\t')
 
