@@ -9,4 +9,4 @@
 #SBATCH --mem 100G
 
 source venv/bin/activate
-python3 latent_space_exploration.py -cg $1 -lt $2 -m $3
+python3 latent_space_exploration.py -cg $1 -lt $2 -m cg

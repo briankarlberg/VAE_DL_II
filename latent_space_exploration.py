@@ -118,7 +118,6 @@ if __name__ == '__main__':
 
             history = vae.history
 
-
     elif args.model == 'cg':
 
         if args.coding_genes is None:
