@@ -43,6 +43,7 @@ class CodingGeneVae:
 
         x = input_layer
         for layer in reversed(range(layers)):
+            layer += 2
             x = Dense(units=input_dimensions / layer, activation='relu')(x)
 
         return Model(inputs=input_layer, outputs=x, name="decoder")
