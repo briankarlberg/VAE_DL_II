@@ -1,6 +1,6 @@
 import pandas as pd
 from tensorflow.keras.layers import Input, Dense, Dropout
-from tensorflow.keras.model import Model
+from tensorflow.keras.models import Model
 from library.coding_gene_vae.sampling import Sampling
 import tensorflow as tf
 from typing import List
