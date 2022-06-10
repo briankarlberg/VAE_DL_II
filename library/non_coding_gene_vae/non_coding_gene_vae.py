@@ -82,7 +82,7 @@ class NonCodingGeneVae:
                                separator='\t')
         callbacks.append(csv_logger)
 
-        self._history = self._vae.fit(x={"encoder_input": training_data},
+        self._history = self._vae.fit(x={"Encoder Input": training_data},
                                       validation_data=(validation_data, validation_data),
                                       epochs=500,
                                       callbacks=callbacks,
