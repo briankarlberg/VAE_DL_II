@@ -84,7 +84,6 @@ class CodingGeneVae:
         callbacks.append(csv_logger)
 
         self._history = self._vae.fit(x={"encoder_input": training_data},
-                                      validation_data=(validation_data, validation_data),
                                       y=training_data,
                                       epochs=500,
                                       callbacks=callbacks,
