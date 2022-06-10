@@ -49,7 +49,7 @@ class NonCodingGeneVae:
 
     def build_model(self):
         output = self._decoder(self._encoder.outputs[2])
-        self._vae = Model(inputs=self._encoder.input, ouputs=output, name="Non Coding Gene VAE")
+        self._vae = Model(inputs=self._encoder.input, outputs=output, name="Non Coding Gene VAE")
 
         #   VAE loss terms w/ KL divergence
         def Loss(true, pred):
