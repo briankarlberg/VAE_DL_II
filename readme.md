@@ -17,6 +17,10 @@ Operations notes:
 cd /home/groups/EllrottLab/drug_resp/VAE/VAE_DL_II/
 scancel JOBID
 
+2022-06-10
+import pydot_ng as pydot
+pydot.Dot.create(pydot.Dot())
+
 coding_gene_vae.py
 
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/users/karlberb/gsl/lib
