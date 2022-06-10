@@ -130,10 +130,9 @@ if __name__ == '__main__':
         coding_gene_train_data, coding_gene_validation_data = load_data(args.coding_genes)
 
         vae: CodingGeneVae = CodingGeneVae(embedding_dimension=latent_space, layer_count=3,
-                                           input_dimension=coding_gene_train_data.shape[1])
+                                           input_dimension=coding_gene_train_data.shape[1], save_path=str(base_path))
         vae.build_model()
-        vae.train(training_data=coding_gene_train_data, validation_data=coding_gene_validation_data,
-                  save_path=str(base_path))
+        vae.train(training_data=coding_gene_train_data, validation_data=coding_gene_validation_data)
 
         history = vae.history
 

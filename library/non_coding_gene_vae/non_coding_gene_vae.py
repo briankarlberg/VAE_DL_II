@@ -5,25 +5,27 @@ from library.coding_gene_vae.sampling import Sampling
 import tensorflow as tf
 from typing import List
 from tensorflow.keras.callbacks import EarlyStopping, TerminateOnNaN, CSVLogger
+from tensorflow.keras.utils import plot_model
 import os
 
 
 class NonCodingGeneVae:
 
-    def __init__(self, input_dimension: int, embedding_dimension: int, layer_count: int):
+    def __init__(self, input_dimension: int, embedding_dimension: int, layer_count: int, save_path: str):
         self._layer_count = layer_count
         self._embedding_dimension = embedding_dimension
         self._encoder = self.__build_encoder(layers=layer_count, input_dimensions=input_dimension)
         self._decoder = self.__build_decoder(layers=layer_count, input_dimensions=input_dimension)
         self._vae = None
         self._history = None
+        self._save_path = save_path
 
     @property
     def history(self):
         return self._history
 
     def __build_encoder(self, layers: int, input_dimensions: int) -> Model:
-        input_layer = Input(shape=(input_dimensions,), name="Encoder Input")
+        input_layer = Input(shape=(input_dimensions,), name="encoder_input")
 
         x = input_layer
         for layer in range(layers):
@@ -45,11 +47,13 @@ class NonCodingGeneVae:
         for layer in reversed(range(layers)):
             x = Dense(units=input_dimensions / layer, activation='relu')(x)
 
+        x = Dense(units=input_dimensions, activation='relu')(x)
+
         return Model(inputs=input_layer, outputs=x, name="decoder")
 
     def build_model(self):
         output = self._decoder(self._encoder.outputs[2])
-        self._vae = Model(inputs=self._encoder.input, ouputs=output, name="Non Coding Gene VAE")
+        self._vae = Model(inputs=self._encoder.input, outputs=output, name="non_coding_gene_vae")
 
         #   VAE loss terms w/ KL divergence
         def Loss(true, pred):
@@ -61,14 +65,16 @@ class NonCodingGeneVae:
 
             return total_loss
 
-        losses = {"encoder": Loss}
-        loss_weight = {"encoder": 1.0}
+        losses = {"decoder": Loss}
+        loss_weight = {"decoder": 1.0}
 
         self._vae.compile(loss=losses, loss_weights=loss_weight, optimizer="adam")
 
-        self._vae.summary()
+        plot_model(self._encoder, to_file=os.path.join(self._save_path, 'encoder_model.png'), show_shapes=True)
+        plot_model(self._decoder, to_file=os.path.join(self._save_path, 'decoder_model.png'), show_shapes=True)
+        plot_model(self._vae, to_file=os.path.join(self._save_path, 'vae_model.png'), show_shapes=True)
 
-    def train(self, training_data: pd.DataFrame, validation_data: pd.DataFrame, save_path: str):
+    def train(self, training_data: pd.DataFrame, validation_data: pd.DataFrame):
 
         callbacks: List = []
 
@@ -78,12 +84,13 @@ class NonCodingGeneVae:
         term_nan = TerminateOnNaN()
         callbacks.append(term_nan)
 
-        csv_logger = CSVLogger(os.path.join(save_path, 'training.log'),
+        csv_logger = CSVLogger(os.path.join(self._save_path, 'training.log'),
                                separator='\t')
         callbacks.append(csv_logger)
 
         self._history = self._vae.fit(x={"encoder_input": training_data},
                                       validation_data=(validation_data, validation_data),
+                                      y=training_data,
                                       epochs=500,
                                       callbacks=callbacks,
                                       shuffle=True,
