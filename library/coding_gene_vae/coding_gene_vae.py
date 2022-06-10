@@ -62,8 +62,8 @@ class CodingGeneVae:
 
             return total_loss
 
-        losses = {"encoder": Loss}
-        loss_weight = {"encoder": 1.0}
+        losses = {"decoder": Loss}
+        loss_weight = {"decoder": 1.0}
 
         self._vae.compile(loss=losses, loss_weights=loss_weight, optimizer="adam")
 
