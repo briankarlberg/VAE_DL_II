@@ -23,7 +23,7 @@ class CodingGeneVae:
         return self._history
 
     def __build_encoder(self, layers: int, input_dimensions: int) -> Model:
-        input_layer = Input(shape=(input_dimensions,), name="Encoder Input")
+        input_layer = Input(shape=(input_dimensions,), name="encoder_input")
 
         x = input_layer
         for layer in range(layers):
@@ -50,7 +50,7 @@ class CodingGeneVae:
 
     def build_model(self):
         output = self._decoder(self._encoder.outputs[2])
-        self._vae = Model(inputs=self._encoder.input, outputs=output, name="Coding Gene VAE")
+        self._vae = Model(inputs=self._encoder.input, outputs=output, name="coding_gene_vae")
 
         #   VAE loss terms w/ KL divergence
         def Loss(true, pred):
@@ -83,7 +83,7 @@ class CodingGeneVae:
                                separator='\t')
         callbacks.append(csv_logger)
 
-        self._history = self._vae.fit(x={"Encoder Input": training_data},
+        self._history = self._vae.fit(x={"encoder_input": training_data},
                                       validation_data=(validation_data, validation_data),
                                       epochs=500,
                                       callbacks=callbacks,
