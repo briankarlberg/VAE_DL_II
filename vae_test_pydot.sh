@@ -10,5 +10,6 @@
 
 source venv/bin/activate
 export PYTHONPATH=$PYTHONPATH:/home/groups/EllrottLab/drug_resp/VAE/VAE_DL_II/venv/lib/python3.7/site-packages
+export PATH=/home/groups/EllrottLab/drug_resp/VAE/VAE_DL_II/venv/bin:/home/groups/EllrottLab/gdan-tmp/bk_sandbox/toolbox/mini_conda/condabin:/home/users/karlberb/miniconda3/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/ibutils/bin:/opt/puppetlabs/bin:/opt/dell/srvadmin/bin:/home/users/karlberb/bin
 
 python3 vae_test_pydot.py
