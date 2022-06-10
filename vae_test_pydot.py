@@ -1,7 +1,9 @@
+import sys
 import pydot_ng as pydot
-def main():
+
+def main() -> int:
    pydot.Dot.create(pydot.Dot())
-   print("Test run 6-10 pydot")
+   print("Test Run Complete")
 
 if __name__ == '__main__':
-   main()
+   sys.exit(main())
