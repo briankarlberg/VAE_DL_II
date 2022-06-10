@@ -16,6 +16,8 @@ Command line args
 Operations notes:
 cd /home/groups/EllrottLab/drug_resp/VAE/VAE_DL_II/
 scancel JOBID
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/users/karlberb/gsl/lib
+/home/groups/EllrottLab/drug_resp/VAE/VAE_DL_II/venv/lib/python3.7/site-packages
 
 $ srun -p gpu --gres gpu:1 pipeline.sh
 
