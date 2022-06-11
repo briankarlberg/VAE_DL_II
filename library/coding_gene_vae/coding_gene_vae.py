@@ -7,7 +7,8 @@ from typing import List
 from tensorflow.keras.callbacks import EarlyStopping, TerminateOnNaN, CSVLogger
 from tensorflow.keras.utils import plot_model
 import os
-
+from tensorflow.python.framework.ops import disable_eager_execution
+disable_eager_execution()
 
 class CodingGeneVae:
 
