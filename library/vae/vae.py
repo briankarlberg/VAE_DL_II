@@ -8,6 +8,7 @@ import tensorflow as tf
 import os
 import numpy as np
 from tensorflow.keras.utils import plot_model
+from tensorflow.keras.callbacks import EarlyStopping, CSVLogger
 
 
 class CodingGeneModel:
@@ -78,13 +79,21 @@ class CodingGeneModel:
         plot_model(self._vae, to_file=os.path.join(self._save_path, 'coding_gene_model.png'), show_shapes=True)
 
     def train_model(self, train_data: np.ndarray, validation_data: np.ndarray):
-        callback = tf.keras.callbacks.EarlyStopping(monitor="reconstruction_loss",
-                                                    mode="min", patience=5,
-                                                    restore_best_weights=True)
+        callbacks = []
+
+        early_stop = EarlyStopping(monitor="reconstruction_loss",
+                                   mode="min", patience=5,
+                                   restore_best_weights=True)
+        callbacks.append(early_stop)
+
+        csv_logger = CSVLogger(os.path.join(self._save_path, 'training.log'),
+                               separator='\t')
+        callbacks.append(csv_logger)
+
         self._history = self._vae.fit(train_data,
                                       validation_data=(validation_data, validation_data),
                                       epochs=500,
-                                      callbacks=callback,
+                                      callbacks=callbacks,
                                       batch_size=32,
                                       shuffle=True,
                                       verbose=1)
