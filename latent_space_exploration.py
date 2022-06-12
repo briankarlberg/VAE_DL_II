@@ -1,4 +1,5 @@
 import sys
+
 sys.path.append('/home/groups/EllrottLab/drug_resp/VAE/VAE_DL_II/venv/lib/python3.7/site-packages')
 
 import pandas as pd
@@ -11,8 +12,8 @@ from library.plotting.plots import Plotting
 from library.multi_three_encoder_vae.multi_three_encoder_architecture import MultiThreeEncoderArchitecture
 from pathlib import Path
 from library.data.folder_management import FolderManagement
-from library.regression_vae.regression_vae import RegressionVAE
 from library.coding_gene_vae.coding_gene_vae import CodingGeneVae
+from library.vae.vae import CodingGeneModel
 from typing import Tuple
 
 base_path = Path("latent_space_generation")
@@ -128,11 +129,10 @@ if __name__ == '__main__':
                 "Coding Gene VAE needs data. Please specify the data by using --coding_genes as an cli argument")
 
         coding_gene_train_data, coding_gene_validation_data = load_data(args.coding_genes)
-
-        vae: CodingGeneVae = CodingGeneVae(embedding_dimension=latent_space, layer_count=3,
-                                           input_dimension=coding_gene_train_data.shape[1], save_path=str(base_path))
-        vae.build_model()
-        vae.train(training_data=coding_gene_train_data, validation_data=coding_gene_validation_data)
+        vae: CodingGeneModel = CodingGeneModel(input_dimensions=coding_gene_train_data.shape[1],
+                                               save_path=str(base_path), embedding_dimension=latent_space)
+        vae.compile_model()
+        vae.train_model(train_data=coding_gene_train_data, validation_data=coding_gene_validation_data)
 
         history = vae.history
 

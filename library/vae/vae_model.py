@@ -2,9 +2,9 @@ import tensorflow as tf
 from tensorflow import keras
 
 
-class VAE(keras.Model):
+class CodingGeneVAE(keras.Model):
     def __init__(self, encoder, decoder, **kwargs):
-        super(VAE, self).__init__(**kwargs)
+        super(CodingGeneVAE, self).__init__(**kwargs)
         self.encoder = encoder
         self.decoder = decoder
         self.total_loss_tracker = keras.metrics.Mean(name="total_loss")
