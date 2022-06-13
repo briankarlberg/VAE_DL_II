@@ -40,7 +40,7 @@ def get_args():
     return parser.parse_args()
 
 
-inspection_version = '2022-06-09_run0'
+inspection_version = '2022-06-13_run0'
 test_variable = 9
 # loss_inspection = 'Here is line 42 in latent_space_exploration.py'
 template = 'Coding gene VAE test'
