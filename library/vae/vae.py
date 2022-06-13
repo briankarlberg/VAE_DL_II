@@ -2,8 +2,8 @@ import tensorflow as tf
 from keras import layers, regularizers
 import pandas as pd
 import keras
-from vae.sampling import Sampling
-from vae.vae_model import CodingGeneVAE
+from library.vae.sampling import Sampling
+from library.vae.vae_model import CodingGeneVAE
 import tensorflow as tf
 import os
 import numpy as np
