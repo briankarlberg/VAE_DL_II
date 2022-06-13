@@ -132,7 +132,9 @@ if __name__ == '__main__':
         vae: CodingGeneModel = CodingGeneModel(input_dimensions=coding_gene_train_data.shape[1],
                                                save_path=str(base_path), embedding_dimension=latent_space)
         vae.compile_model()
-        vae.train_model(train_data=coding_gene_train_data, validation_data=coding_gene_validation_data)
+
+        vae.train_model(train_data=coding_gene_train_data.to_numpy(),
+                        validation_data=coding_gene_validation_data.to_numpy())
 
         history = vae.history
 
