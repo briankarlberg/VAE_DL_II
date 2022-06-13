@@ -72,13 +72,13 @@ class CodingGeneModel:
         self._vae = CodingGeneVAE(self._encoder, self._decoder)
         self._vae.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=1e-3))
 
-    def train_model(self, train_data: np.ndarray, validation_data: np.ndarray):
         plot_model(self._encoder, to_file=os.path.join(self._save_path, 'coding_gene_encoder_model.png'),
                    show_shapes=True)
         plot_model(self._decoder, to_file=os.path.join(self._save_path, 'coding_gene_decoder_model.png'),
                    show_shapes=True)
-        plot_model(self._vae, to_file=os.path.join(self._save_path, 'coding_gene_model.png'), show_shapes=True)
-        
+        # plot_model(self._vae, to_file=os.path.join(self._save_path, 'coding_gene_model.png'), show_shapes=True)
+
+    def train_model(self, train_data: np.ndarray, validation_data: np.ndarray):
         callbacks = []
 
         early_stop = EarlyStopping(monitor="reconstruction_loss",
