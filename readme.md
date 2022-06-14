@@ -36,5 +36,19 @@ sbatch lse_500.sh data/500_samples_v1/coding_1.tsv data/500_samples_v1/noncod_1.
 
 sbatch test_lse.sh data/5_samples/coding_5.tsv data/5_samples/noncod_5.tsv data/5_samples/morgan_5.tsv 1000
 
+# Usage
 
+## Coding Gene VAE
+
+```
+sbatch CodingGeneVAE.sh [path to file] [latent space size]
+```
+
+## Non Coding Gene VAE
+
+TBD
+
+## Molecular Fingerprint VAE
+
+TBD
 
