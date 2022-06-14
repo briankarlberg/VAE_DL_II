@@ -13,3 +13,4 @@ data/RFE_100/*
 output_reports/
 error_reports/
 latent_space_generation
+coding_gene_results/*
