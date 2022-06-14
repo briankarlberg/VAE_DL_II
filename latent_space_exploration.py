@@ -1,6 +1,6 @@
-import sys
+# import sys
 
-sys.path.append('/home/groups/EllrottLab/drug_resp/VAE/VAE_DL_II/venv/lib/python3.7/site-packages')
+# sys.path.append('/home/groups/EllrottLab/drug_resp/VAE/VAE_DL_II/venv/lib/python3.7/site-packages')
 
 import pandas as pd
 import argparse
