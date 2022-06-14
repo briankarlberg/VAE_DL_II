@@ -19,6 +19,10 @@ scancel JOBID
 
 2022-06-14
 
+File with rounded decimal:
+sbatch CodingGeneVAE.sh ./data/cod_round3_samp500.tsv 1000
+
+File with long decimals
 sbatch CodingGeneVAE.sh data/500_samples_v1/coding_1.tsv 1000
 
 2022-06-10
