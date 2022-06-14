@@ -17,6 +17,10 @@ Operations notes:
 cd /home/groups/EllrottLab/drug_resp/VAE/VAE_DL_II/
 scancel JOBID
 
+2022-06-14
+
+sbatch CodingGeneVAE.sh data/500_samples_v1/coding_1.tsv 1000
+
 2022-06-10
 import pydot_ng as pydot
 pydot.Dot.create(pydot.Dot())
