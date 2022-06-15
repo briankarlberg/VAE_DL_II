@@ -19,7 +19,7 @@ scancel JOBID
 
 2022-06-14
 sbatch CodingGeneVAE.sh [path to file] [latent space size]
-sbatch CodingGeneVAE.sh smp500_ftr14575.tsv 1000
+sbatch CodingGeneVAE.sh ./data/smp500_ftr14575.tsv 1000
 
 sbatch CodingGeneVAE.sh ./data/smp500_ftr19154_dcm3.tsv 1000
 
