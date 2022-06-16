@@ -9,4 +9,4 @@
 #SBATCH --mem 500G
 
 source venv/bin/activate
-python3 coding_gene_vae.py -cg $1 -lt $2
+python3 coding_gene_vae.py -d $1 -lt $2 -p $3

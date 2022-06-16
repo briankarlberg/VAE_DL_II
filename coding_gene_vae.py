@@ -11,7 +11,7 @@ import os
 from pathlib import Path
 from library.data.folder_management import FolderManagement
 
-base_path = Path("coding_gene_results")
+base_path = Path("results")
 
 
 class VAE(keras.Model):
@@ -75,22 +75,23 @@ def get_args():
        """
     parser = argparse.ArgumentParser()
 
-    parser.add_argument("-cg", "--coding_genes", action="store", required=False,
+    parser.add_argument("-d", "--data", action="store", required=False,
                         help="The file to use for coding genes")
     parser.add_argument("-lt", "--latent_space", type=int, action="store", required=True,
                         help="Defines the latent space dimensions")
     parser.add_argument("-s", "--scaling", action="store", required=False,
                         help="Which type of scaling should be used", choices=["min", "s"], default="s")
+    parser.add_argument("-p", "--prefix", actions="store", required=True, help="The prefix for creating the results folder")
     return parser.parse_args()
 
 
 # Load args
 args = get_args()
 
-FolderManagement.create_directory(path=base_path)
+FolderManagement.create_directory(path=Path(f"{args.prefix}_{base_path}"))
 
 latent_dim = args.latent_space
-data = pd.read_csv(args.coding_genes, sep='\t', index_col=0)
+data = pd.read_csv(args.data, sep='\t', index_col=0)
 # data.drop(columns=["Unnamed: 0"], inplace=True)
 
 

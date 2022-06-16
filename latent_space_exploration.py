@@ -12,8 +12,6 @@ from library.plotting.plots import Plotting
 from library.multi_three_encoder_vae.multi_three_encoder_architecture import MultiThreeEncoderArchitecture
 from pathlib import Path
 from library.data.folder_management import FolderManagement
-from library.coding_gene_vae.coding_gene_vae import CodingGeneVae
-from library.vae.vae import CodingGeneModel
 from typing import Tuple
 
 base_path = Path("latent_space_generation")
