@@ -88,8 +88,8 @@ def get_args():
 
 # Load args
 args = get_args()
-
-FolderManagement.create_directory(path=Path(f"{args.prefix}_{base_path}"))
+base_path = f"{args.prefix}_{base_path}"
+FolderManagement.create_directory(path=Path(base_path))
 
 latent_dim = args.latent_space
 data = pd.read_csv(args.data, sep='\t', index_col=0)
