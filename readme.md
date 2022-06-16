@@ -56,17 +56,13 @@ sbatch test_lse.sh data/5_samples/coding_5.tsv data/5_samples/noncod_5.tsv data/
 
 # Usage
 
-## Coding Gene VAE
+## VAE
 
 ```
-sbatch CodingGeneVAE.sh [path to file] [latent space size]
+sbatch CodingGeneVAE.sh [path to file] [latent space size] [prefix]
 ```
 
-## Non Coding Gene VAE
-
-TBD
-
-## Molecular Fingerprint VAE
-
-TBD
-
+Example:
+```
+sbatch CodingGeneVAE.sh data/coding_genes.ts 1000 coding_gene
+```
