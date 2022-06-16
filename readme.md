@@ -59,10 +59,10 @@ sbatch test_lse.sh data/5_samples/coding_5.tsv data/5_samples/noncod_5.tsv data/
 ## VAE
 
 ```
-sbatch CodingGeneVAE.sh [path to file] [latent space size] [prefix]
+sbatch VAE.sh [path to file] [latent space size] [prefix]
 ```
 
 Example:
 ```
-sbatch CodingGeneVAE.sh data/coding_genes.ts 1000 coding_gene
+sbatch VAE.sh data/coding_genes.ts 1000 coding_gene
 ```
