@@ -6,53 +6,36 @@
 3. pip install -r requirements.txt
 4. python3 src/main.py [arguments]
 
-Command line args  
+Command line args  (three head model)
 1  coding genes  
 2  non-coding genes  
 3  morgan fingerprints  
 4  scaling: min or s  
 5  model: o or n   
 
+# Usage
+
+## VAE
+
+```
+sbatch VAE.sh [path to file] [latent space size] [prefix]
+```
+
+Example:
+```
+sbatch VAE.sh data/coding_genes.ts 1000 coding_gene
+```
 Operations notes:
 cd /home/groups/EllrottLab/drug_resp/VAE/VAE_DL_II/
 scancel JOBID
+
+sbatch VAE.sh data/smp500_ftr5663.tsv 500 ncd_v0
 
 2022-06-14
 sbatch CodingGeneVAE.sh [path to file] [latent space size]
 sbatch CodingGeneVAE.sh ./data/smp500_ftr14575.tsv 1000
 
-sbatch CodingGeneVAE.sh ./data/smp500_ftr19154_dcm3.tsv 1000
-
-sbatch CodingGeneVAE.sh ./data/coding_1_2_decimals.tsv 1000
-
-Local run:
-python3 coding_gene_vae.py -cg ./data/coding_1_2_decimals.tsv -lt 1000
-python3 coding_gene_vae.py -cg ./data/cod_round3_samp500.tsv -lt 1000
-
-File with rounded decimal:
-sbatch CodingGeneVAE.sh ./data/cod_round3_samp500.tsv 1000
-
-File with long decimals
-sbatch CodingGeneVAE.sh data/500_samples_v1/coding_1.tsv 1000
-
-2022-06-10
-import pydot_ng as pydot
-pydot.Dot.create(pydot.Dot())
-
-coding_gene_vae.py
-
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/users/karlberb/gsl/lib
-/home/groups/EllrottLab/drug_resp/VAE/VAE_DL_II/venv/lib/python3.7/site-packages
-
 $ srun -p gpu --gres gpu:1 pipeline.sh
-
-2022-06-09
-sbatch dev_CGLatentSpaceExploration.sh data/500_samples_v1/coding_1.tsv 1000 o
-
-2022-06-08
-sbatch lse_500.sh data/500_samples_v1/coding_1.tsv data/500_samples_v1/noncod_1.tsv data/500_samples_v1/morgan_1.tsv 1000
-
-sbatch test_lse.sh data/5_samples/coding_5.tsv data/5_samples/noncod_5.tsv data/5_samples/morgan_5.tsv 1000
 
 # Usage
 
