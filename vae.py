@@ -81,15 +81,15 @@ def get_args():
                         help="Defines the latent space dimensions")
     parser.add_argument("-s", "--scaling", action="store", required=False,
                         help="Which type of scaling should be used", choices=["min", "s"], default="s")
-    parser.add_argument("-p", "--prefix", actions="store", required=True, type=str,
+    parser.add_argument("-p", "--prefix", action="store", required=True, type=str,
                         help="The prefix for creating the results folder")
     return parser.parse_args()
 
 
 # Load args
 args = get_args()
-
-FolderManagement.create_directory(path=Path(f"{args.prefix}_{base_path}"))
+base_path = f"{args.prefix}_{base_path}"
+FolderManagement.create_directory(path=Path(base_path))
 
 latent_dim = args.latent_space
 data = pd.read_csv(args.data, sep='\t', index_col=0)
