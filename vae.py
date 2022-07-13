@@ -10,6 +10,7 @@ from tensorflow.keras.callbacks import EarlyStopping, CSVLogger
 import os
 from pathlib import Path
 from library.data.folder_management import FolderManagement
+import json
 
 base_path = Path("results")
 
@@ -139,8 +140,11 @@ csv_logger = CSVLogger(os.path.join(base_path, 'training.log'),
                        separator='\t')
 callbacks.append(csv_logger)
 
-vae.fit(train_data,
-        callbacks=callbacks,
-        validation_data=(val_data, val_data),
-        epochs=500, batch_size=128)
+history = vae.fit(train_data,
+                  callbacks=callbacks,
+                  validation_data=(val_data, val_data),
+                  epochs=500, batch_size=128)
 
+# Save it under the form of a json file
+json.dump(history.history, open(Path(base_path, "history.json"), 'w'))
+vae.save(Path(base_path, f'{args.prefix}_model'))
