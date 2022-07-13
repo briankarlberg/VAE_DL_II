@@ -4,7 +4,7 @@ from tensorflow import keras
 from tensorflow.keras import layers
 import pandas as pd
 import argparse
-from library.preprocessing.preprocessing import Preprocessing
+from library.preprocessing.scaling import Preprocessing
 from library.preprocessing.splits import SplitHandler
 from tensorflow.keras.callbacks import EarlyStopping, CSVLogger
 import os
@@ -98,8 +98,8 @@ data = pd.read_csv(args.data, sep='\t', index_col=0)
 
 train_data, val_data = SplitHandler.create_splits(input_data=data, without_val=True)
 
-train_data = Preprocessing.normalize(train_data, features=train_data.columns)
-val_data = Preprocessing.normalize(val_data, features=val_data.columns)
+train_data, scaler = Preprocessing.normalize(train_data, features=train_data.columns)
+val_data, _ = Preprocessing.normalize(val_data, features=val_data.columns, scaler=scaler)
 
 input_dimensions = train_data.shape[1]
 
@@ -143,3 +143,5 @@ vae.fit(train_data,
         callbacks=callbacks,
         validation_data=(val_data, val_data),
         epochs=500, batch_size=128)
+
+encoder.predict()

@@ -6,7 +6,7 @@ import pandas as pd
 import argparse
 from library.data.data_loader import DataLoader
 from library.preprocessing.splits import SplitHandler
-from library.preprocessing.preprocessing import Preprocessing
+from library.preprocessing.scaling import Preprocessing
 from library.three_encoder_vae.three_encoder_architecture import ThreeEncoderArchitecture
 from library.plotting.plots import Plotting
 from library.multi_three_encoder_vae.multi_three_encoder_architecture import MultiThreeEncoderArchitecture

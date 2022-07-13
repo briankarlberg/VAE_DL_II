@@ -8,7 +8,8 @@ class Preprocessing:
     available_options = ["s", "min"]
 
     @staticmethod
-    def normalize(data: pd.DataFrame, features: list, method: str = "s", feature_range: Tuple = None) -> pd.DataFrame:
+    def normalize(data: pd.DataFrame, features: list, method: str = "s", feature_range: Tuple = None,
+                  scaler=None) -> (pd.DataFrame, any):
         """
         @param data The data to be normalized
         @param features The features of the dataset
@@ -31,19 +32,24 @@ class Preprocessing:
         # num_cols = data.columns[data.dtypes.apply(lambda c: np.issubdtype(c, np.number))]
 
         if method == "s":
-            standard_scaler = StandardScaler()
-            data = standard_scaler.fit_transform(data)
+            if scaler is None:
+                scaler = StandardScaler()
+                scaler.fit(data)
+
+            data = scaler.transform(data)
 
         elif method == "min":
-            if feature_range is not None:
-                min_max_scaler = MinMaxScaler(feature_range=feature_range)
-            else:
-                min_max_scaler = MinMaxScaler(feature_range=(-1, 1))
+            if feature_range is not None and scaler is None:
+                scaler = MinMaxScaler(feature_range=feature_range)
+                scaler.fit(data)
+            elif feature_range is None and scaler is None:
+                scaler = MinMaxScaler(feature_range=(-1, 1))
+                scaler.fit(data)
 
-            data = min_max_scaler.fit_transform(data)
+            data = scaler.transform(data)
 
         else:
             raise f"Please provide a valid normalization method. Select one of these options: " \
                   f"{[option for option in Preprocessing.available_options]}"
 
-        return pd.DataFrame(columns=features, data=data)
+        return pd.DataFrame(columns=features, data=data), scaler

@@ -33,6 +33,8 @@ class MultiThreeEncoderVAE(keras.Model):
 
     def train_step(self, data):
         with tf.GradientTape() as tape:
+
+
             coding_recon_loss, coding_kl_loss = self.calculate_loss(self.coding_encoder,
                                                                     self.coding_decoder, data[0][0])
 
@@ -78,7 +80,7 @@ class MultiThreeEncoderVAE(keras.Model):
 
         return self.coding_decoder(z), self.non_coding_decoder(z), self.mf_decoder(z)
 
-    def calculate_loss(self, encoder: Model, decoder: Model, data) -> Tuple:
+    def calculate_loss(self, z, decoder: Model, data) -> Tuple:
         z_mean, z_log_var, z = encoder(data)
         reconstruction = decoder(z)
         reconstruction_loss_fn = keras.losses.MeanSquaredError()
