@@ -144,4 +144,3 @@ vae.fit(train_data,
         validation_data=(val_data, val_data),
         epochs=500, batch_size=128)
 
-encoder.predict()
