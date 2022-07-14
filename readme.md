@@ -17,6 +17,9 @@ Command line args  (three head model)
 
 ## VAE
 
+# Current shell	file is	VAE.sh
+# old .sh files	put to shell_script_archive
+
 ```
 sbatch VAE.sh [path to file] [latent space size] [prefix]
 ```
