@@ -11,6 +11,7 @@ import os
 from pathlib import Path
 from library.data.folder_management import FolderManagement
 import json
+from tensorflow.keras.models import Model
 
 base_path = Path("results")
 
@@ -18,8 +19,8 @@ base_path = Path("results")
 class VAE(keras.Model):
     def __init__(self, encoder, decoder, **kwargs):
         super(VAE, self).__init__(**kwargs)
-        self.encoder = encoder
-        self.decoder = decoder
+        self.encoder: Model = encoder
+        self.decoder: Model = decoder
         self.total_loss_tracker = keras.metrics.Mean(name="total_loss")
         self.reconstruction_loss_tracker = keras.metrics.Mean(
             name="reconstruction_loss"
@@ -94,13 +95,12 @@ FolderManagement.create_directory(path=Path(base_path))
 
 latent_dim = args.latent_space
 data = pd.read_csv(args.data, sep='\t', index_col=0)
-# data.drop(columns=["Unnamed: 0"], inplace=True)
 
-
-train_data, val_data = SplitHandler.create_splits(input_data=data, without_val=True)
+train_data, val_data, test_data = SplitHandler.create_splits(input_data=data, without_val=False)
 
 train_data, scaler = Preprocessing.normalize(train_data, features=train_data.columns)
 val_data, _ = Preprocessing.normalize(val_data, features=val_data.columns, scaler=scaler)
+test_data, _ = Preprocessing.normalize(data=test_data, features=test_data.columns, scaler=scaler)
 
 input_dimensions = train_data.shape[1]
 
@@ -124,7 +124,7 @@ decoder_outputs = layers.Dense(units=input_dimensions, activation="relu")(x)
 decoder = keras.Model(latent_inputs, decoder_outputs, name="decoder")
 decoder.summary()
 
-vae = VAE(encoder, decoder)
+vae: VAE = VAE(encoder, decoder)
 vae.compile(optimizer=keras.optimizers.Adam())
 
 # vae.summary()
@@ -148,3 +148,6 @@ history = vae.fit(train_data,
 # Save it under the form of a json file
 json.dump(history.history, open(Path(base_path, "history.json"), 'w'))
 vae.save(Path(base_path, f'{args.prefix}_model'))
+
+embedding = pd.DataFrame(vae.encoder.predict(test_data))
+embedding.to_csv(Path(base_path, f"{args.prefix}_embeddings.csv"), index=False)
