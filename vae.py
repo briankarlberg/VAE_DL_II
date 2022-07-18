@@ -79,6 +79,12 @@ def get_args():
 
     parser.add_argument("-d", "--data", action="store", required=False,
                         help="The file to use for coding genes")
+    parser.add_argument("--train", action="store", required=False,
+                        help="The normalized train data")
+    parser.add_argument("--val", action="store", required=False,
+                        help="The normalized val data")
+    parser.add_argument("--test", action="store", required=False,
+                        help="The normalized test data")
     parser.add_argument("-lt", "--latent_space", type=int, action="store", required=True,
                         help="Defines the latent space dimensions")
     parser.add_argument("-s", "--scaling", action="store", required=False,
@@ -94,13 +100,19 @@ base_path = f"{args.prefix}_{base_path}"
 FolderManagement.create_directory(path=Path(base_path))
 
 latent_dim = args.latent_space
-data = pd.read_csv(args.data, sep='\t', index_col=0)
 
-train_data, val_data, test_data = SplitHandler.create_splits(input_data=data, without_val=False)
+if args.data is not None:
+    data = pd.read_csv(args.data, sep='\t', index_col=0)
 
-train_data, scaler = Preprocessing.normalize(train_data, features=train_data.columns)
-val_data, _ = Preprocessing.normalize(val_data, features=val_data.columns, scaler=scaler)
-test_data, _ = Preprocessing.normalize(data=test_data, features=test_data.columns, scaler=scaler)
+    train_data, val_data, test_data = SplitHandler.create_splits(input_data=data, without_val=False)
+
+    train_data, scaler = Preprocessing.normalize(train_data, features=train_data.columns)
+    val_data, _ = Preprocessing.normalize(val_data, features=val_data.columns, scaler=scaler)
+    test_data, _ = Preprocessing.normalize(data=test_data, features=test_data.columns, scaler=scaler)
+else:
+    train_data = pd.read_csv(args.train, sep='\t', index_col=0)
+    val_data = pd.read_csv(args.val, sep='\t', index_col=0)
+    test_data = pd.read_csv(args.test, sep='\t', index_col=0)
 
 input_dimensions = train_data.shape[1]
 
