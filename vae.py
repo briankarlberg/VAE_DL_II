@@ -161,6 +161,6 @@ history = vae.fit(train_data,
 json.dump(history.history, open(Path(base_path, "history.json"), 'w'))
 vae.save(Path(base_path, f'{args.prefix}_model'))
 
-print(vae.encoder.predict(test_data))
-embedding = pd.DataFrame(vae.encoder.predict(test_data))
+z_mean, z_var, embedding = vae.encoder.predict(test_data)
+embedding = pd.DataFrame(embedding)
 embedding.to_csv(Path(base_path, f"{args.prefix}_embeddings.csv"), index=False)
