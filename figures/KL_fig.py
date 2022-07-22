@@ -1,3 +1,5 @@
+import maptplotlib.pyplot as plt
+
 plt.plot(list(range(1,7)), history_dict['kl_loss'])
 plt.title("KL loss, coding gene encoding")
 plt.xlabel('Epoch')
