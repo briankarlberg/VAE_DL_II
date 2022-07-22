@@ -34,7 +34,7 @@ scancel JOBID
 
 2022-07-22
 
-srun VAE-split.sh 1000 v0.4 X_exp_scal_xfrm_I-BET151_trn.tsv X_val_scal_xfrm_I-BET151_val.tsv X_exp_scal_xfrm_I-BET151_tst.tsv
+srun VAE-split.sh 1000 v0.4 data/X_exp_scal_xfrm_I-BET151_trn.tsv data/X_val_scal_xfrm_I-BET151_val.tsv data/X_exp_scal_xfrm_I-BET151_tst.tsv
 sbatch VAE-split.sh 1000 v0.3 data/train_set.csv data/val_set.csv data/test_set.val
 
 2022-07-21
