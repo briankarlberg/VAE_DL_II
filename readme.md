@@ -32,6 +32,9 @@ Operations notes:
 cd /home/groups/EllrottLab/drug_resp/VAE/VAE_DL_II/
 scancel JOBID
 
+2022-07-21
+sbatch VAE-split.sh 1000 v0.3 data/train_set.csv data/val_set.csv data/test_set.val
+
 sbatch VAE.sh data/smp500_ftr5663.tsv 500 ncd_v0
 
 2022-06-14
