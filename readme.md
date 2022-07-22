@@ -34,6 +34,14 @@ scancel JOBID
 
 2022-07-22
 
+kl_loss nanning
+   diagnostic steps:
+generate synthetic data; sklearn, numpy, etc.
+different response values - IC 50, EC 50
+structure as drug response within cell-line model
+identify CCLE assay type
+   Literature search assay-specific normalization strategies
+
 srun VAE-split.sh 1000 v0.4 data/X_exp_scal_xfrm_I-BET151_trn.tsv data/X_val_scal_xfrm_I-BET151_val.tsv data/X_exp_scal_xfrm_I-BET151_tst.tsv
 sbatch VAE-split.sh 1000 v0.3 data/train_set.csv data/val_set.csv data/test_set.val
 
