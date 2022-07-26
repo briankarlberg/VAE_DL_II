@@ -6,7 +6,7 @@ Goal is to predict small-molecule drug response on
 # sk learn make_regression test file
 # 3000 samples, 250 features, 100 n_informative
 # prescaled and split, next convert app to take numpy arrays
-VAE-split.sh 25 v2 data/trn_mk_rg_v02.csv data/val_mk_rg_v02.tsv data/tst_mk_rg_v02.tsv
+sbatch VAE-split.sh 25 v2 data/trn_mk_rg_v02.tsv data/val_mk_rg_v02.tsv data/tst_mk_rg_v02.tsv
 
 # run transform and scaling functions externally, plus triple split
 # devel notebook xfrm_v1.ipynb, in 7-25 devel dir
