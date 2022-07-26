@@ -1,70 +1,15 @@
-## Installation
+VAE_DL_II operations
+Goal is to predict small-molecule drug response on
+    cell-line expression data, coding and non-coding genes
 
-1. Create virtual environment
-2. Activate environment
-   1. source venv/bin/activate
-3. pip install -r requirements.txt
-4. python3 src/main.py [arguments]
+# run transform and scaling functions externally, plus triple split
+# devel notebook xfrm_v1.ipynb, in 7-25 devel dir
+./VAE-split.sh 25 v0 data/train_set.csv data/val_set.csv data/test_set.val
 
-Command line args  (three head model)
-1  coding genes  
-2  non-coding genes  
-3  morgan fingerprints  
-4  scaling: min or s  
-5  model: o or n   
+# make minimal shell file from VAE-split.sh
+# re-order main.py to take files in order of 1)train 2)test 3)val
+# This is an 80-15-5 split
 
-# Usage
+# mk_rg_02
+./VAE-split_mk_rg.sh 25 mk_rg_02 data/3000x250_trn.tsv data/3000x250_tst.tsv data/3000x250_val.tsv
 
-## VAE
-
-# Current shell	file is	VAE.sh
-# old .sh files	put to shell_script_archive
-
-```
-sbatch VAE.sh [path to file] [latent space size] [prefix]
-```
-
-Example:
-```
-sbatch VAE.sh data/coding_genes.ts 1000 coding_gene
-```
-Operations notes:
-cd /home/groups/EllrottLab/drug_resp/VAE/VAE_DL_II/
-scancel JOBID
-
-2022-07-22
-
-kl_loss nanning
-   diagnostic steps:
-generate synthetic data; sklearn, numpy, etc.
-different response values - IC 50, EC 50
-structure as drug response within cell-line model
-identify CCLE assay type
-   Literature search assay-specific normalization strategies
-
-srun VAE-split.sh 1000 v0.4 data/X_exp_scal_xfrm_I-BET151_trn.tsv data/X_val_scal_xfrm_I-BET151_val.tsv data/X_exp_scal_xfrm_I-BET151_tst.tsv
-sbatch VAE-split.sh 1000 v0.3 data/train_set.csv data/val_set.csv data/test_set.val
-
-2022-07-21
-sbatch VAE-split.sh 1000 v0.3 data/train_set.csv data/val_set.csv data/test_set.val
-
-sbatch VAE.sh data/smp500_ftr5663.tsv 500 ncd_v0
-
-2022-06-14
-sbatch CodingGeneVAE.sh [path to file] [latent space size]
-sbatch CodingGeneVAE.sh ./data/smp500_ftr14575.tsv 1000
-
-$ srun -p gpu --gres gpu:1 pipeline.sh
-
-# Usage
-
-## VAE
-
-```
-sbatch VAE.sh [path to file] [latent space size] [prefix]
-```
-
-Example:
-```
-sbatch VAE.sh data/coding_genes.ts 1000 coding_gene
-```
