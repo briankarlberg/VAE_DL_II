@@ -3,6 +3,9 @@ Goal is to predict small-molecule drug response on
     cell-line expression data, coding and non-coding genes
 
 # 2022-07-26
+sbatch VAE-split.sh 25 v03 data/trn_mk_rg_v03.tsv data/val_mk_rg_v03.tsv data/tst_mk_rg_v03.tsv
+
+# 2022-07-26
 # sk learn make_regression test file
 # 3000 samples, 250 features, 100 n_informative
 # prescaled and split, next convert app to take numpy arrays
